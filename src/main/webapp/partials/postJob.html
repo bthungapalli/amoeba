@@ -1,0 +1,163 @@
+
+<section class="content-header">
+
+
+	<div class="col-md-12">
+				<div class="panel panel-default" style="margin-bottom: 10px;">
+					<div class="panel-heading">
+						<h3 class="panel-title">{{postOrUpdateLabel}}</h3>
+					</div>
+
+				</div>
+     </div>
+    
+      <div class="col-md-12">
+      
+      <div class="row">
+      <div class="col-md-12">
+      
+      Pick Template from the following or <a ui-sref="main.newTemplate">Create Template</a><br>
+      
+		  <label ng-repeat="template in templates" style="padding-right: 10px;" ><input type="radio" name="{{template.templateId}}" id="{{template.templateId}}" ng-model="postJob.templateId" value="{{template.templateId}}"> {{template.templateName}}</label>
+</div>
+      </div>
+    
+	<div class="row">
+		<div class="col-md-12">
+			<form role="form" name="postJobForm" id="postJob">
+			    <div class="form-group" ng-if="userDetails.role===1">
+					<label for="hiringManager">
+						HIRING MANAGER
+					</label>
+					<select class="form-control" ng-model="postJob.hiringUserId" required="required" ng-disabled="userDetails.role===2">
+					<option>Select Hiring Manager</option>
+					<option ng-repeat="HMDetail in HMDetails" value="{{HMDetail.userId}}"> {{HMDetail.email}}</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="title">
+						TITLE<span class="text-red">*</span>
+					</label>
+					<input type="text" ng-model="postJob.title" class="form-control" id="title" required="required" placeholder="Title"/>
+				</div>
+				
+				<div class="row">
+				<div class="form-group col-md-3 col-xs-12">
+					<label for="location">
+						LOCATION<span class="text-red">*</span>
+					</label>
+					<input type="text" ng-model="postJob.location"  class="form-control" id="location" required="required" placeholder="Location" ng-keypress="autoComplete()"/>
+				</div>
+				<div class="form-group col-md-3 col-xs-12" >
+					 <label for="posistionType">
+						POSITION TYPE<span class="text-red">*</span>
+					</label><br>
+					<label class="radio-inline">
+					  <input type="radio" name="Contract" ng-model="postJob.jobType" id="Contract" value="1"> Contract
+					</label>
+					<label class="radio-inline">
+					  <input type="radio" name="Permanent" ng-model="postJob.jobType" id="Permanent" value="0"> Permanent
+					</label>
+					
+				</div>
+				<div class="form-group col-md-3 col-xs-12" >
+					 <label for="startDate">
+						START DATE<span class="text-red">*</span>
+					</label>
+					 <p class="input-group">
+          <input type="text" readonly="readonly" ng-click="popup1.opened=!popup1.opened" class="form-control" uib-datepicker-popup="yyyy/MM/dd" ng-model="postJob.startDate" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" placeholder="Start Date"/>
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="popup1.opened=!popup1.opened"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </p>
+				</div>
+			
+				
+				
+				<div class="form-group col-md-3 col-xs-12" ng-show="postJob.jobType=='1'">
+					 <label for="duration">
+						DURATION<span class="text-red">*</span>
+					</label>
+          <input type="number" min="0" ng-model="postJob.duration" class="form-control" id="duration" ng-required="postJob.jobType==1" placeholder="Duration in Months"/>
+
+				</div>
+				</div>
+				<div class="form-group">
+					<label for="CL">
+						DESCRIPTION<span class="text-red">*</span>
+					</label>
+					<textarea class="form-control"  id="CL" required="required" placeholder="Description"></textarea>
+				</div>
+				<div class="row">
+				
+				<div class="form-group ">
+					<label for="skills">
+						SKILLS<span class="text-red">*</span>
+					</label>
+					<input type="text" ng-model="postJob.skills" class="form-control" id="skills" placeholder="Add skills with comma separated, Eg: Java,Spring"  required/>
+				</div>
+				</div>
+				
+				<div class="row">
+				<div class="form-group col-md-6 col-xs-12" style="padding-left: 0px;">
+					 <label for="compensation"  ng-if="postJob.jobType==0">
+						COMPENSATION <span class="text-red">*</span>
+					</label>
+					<label for="compensation" ng-if="postJob.jobType==1">
+						PAY RATE   <span class="text-red">*</span>
+					</label>
+					<input style="margin-left: 30px;" id="showCompensation" type="checkbox" ng-model="postJob.showCompensation"/><label for="showCompensation">Show {{postJob.jobType==1?'Pay rate':'Compensation'}} to candidate</label>
+					<input type="number" min="0" class="form-control" ng-model="postJob.compensation" id="compensation" required="required" placeholder="{{postJob.jobType==1?'Pay rate':'Compensation'}}"/>
+				</div>
+				
+				<div class="form-group col-md-3 col-xs-12">
+				<div ng-init="payRateType=[{type:'Hourly'},{type:'Weekly'},{type:'Monthly'},{type:'Annually'}]">
+            	<label for="payrateType">
+            		PAY RATE TYPE<span class="text-red">*</span>
+            		</label><br>
+            		<select ng-model="postJob.payrateType" id="type" required="required" ng-options="p.type as p.type for p in payRateType">
+            		 <option value="">Select Type</option> 
+            		</select>
+        		</div>
+				</div>		
+				
+				<div class="form-group col-md-3 col-xs-12">
+				<div ng-init="Currency=[{name:'Euro'},{name:'Dollar'},{name:'Pound'}]">
+            		<label for="Currency">
+            		CURRENCY<span class="text-red">*</span>
+            		</label> <br>
+            		<select ng-model="postJob.currency" id="name" required="required" ng-options="curr.name as curr.name for curr in Currency">
+            		  <option value="">Select Currency</option>
+            		</select>
+        		</div>
+       			</div>
+       				 
+       			</div>
+       			<div class="row">
+				<div class="form-group col-md-6 col-xs-12" style="padding-right: 0px;">
+					 <label for="experience">
+						EXPERIENCE<span class="text-red">*</span>
+					</label> <br>
+					<!-- <input type="number" min="0" class="form-control" ng-model="postJob.experience" id="experience" required="required" placeholder="Experience in Years"/> -->
+				<input type="number" min="0" max="49" step="any" style="width : 5cm" required="required" ng-model="postJob.minimumExperience" id="minimumExperience" placeholder="Minimum Experience" value="" />&nbsp;
+            <span> - </span> &nbsp; 
+            <input type="number" min = "1" max = "50" step="any" style = "width : 5cm" required="required" ng-model="postJob.maximumExperience" id="maximumExperience" placeholder="Maximum Experience" value="" />&nbsp;
+				</div>
+				</div>
+				 <p ng-show="error" class="text-danger"><label>{{error}}</label></p>
+				<div class="text-center">
+				
+				<button type="submit" ng-if="postOrUpdateLabel==='PostJob To VideoResume'" ng-click="createJob();" class="btn  btn-success active" ng-disabled="postJobForm.$invalid || error!='' ">
+			  CREATE JOB  </button>
+			  <button type="submit" ng-if="postOrUpdateLabel==='UPDATE JOB'" ng-click="updateJob();" class="btn  btn-success active" ng-disabled="postJobForm.$invalid || error!=''">
+			  UPDATE JOB</button>
+			  </div>
+			  <br> <br>
+			</form>
+		</div>
+	</div>
+     
+     </div>
+     
+
+</section>

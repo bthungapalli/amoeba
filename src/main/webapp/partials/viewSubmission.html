@@ -1,0 +1,217 @@
+
+<section class="content">
+	<div class="box">
+		<div class="box-header">
+			<h3 class="box-title">
+				<a>{{job.title}}</a>
+			</h3>
+		</div>
+		<div class="box-body">
+			<div class="col-md-12" style="padding-left: 0px; padding-right: 0px;">
+				<ul id="viewSubmissions" class="nav nav-tabs bg-primary">
+					<li ng-disabled="statuses.NEW==0"><a
+						ng-class="{'myJobsActive':status==='NEW'}"
+						ng-click="fetchSubmissions('NEW')">New({{statuses.NEW}})</a></li>
+					<li ng-disabled="statuses.SUBMITTED_HM==0"
+						ng-if="userDetails.role===1"><a
+						ng-class="{'myJobsActive':status==='SUBMITTED_HM'}"
+						ng-click="fetchSubmissions('SUBMITTED_HM')">Submitted to
+							HM({{statuses.SUBMITTED_HM}})</a></li>
+					<li ng-disabled="statuses.PARK==0"><a
+						ng-class="{'myJobsActive':status==='PARK'}"
+						ng-click="fetchSubmissions('PARK')">Park({{statuses.PARK}})</a></li>
+					<li ng-disabled="statuses.INTERVIEW_SCHEDULED==0"><a
+						ng-class="{'myJobsActive':status==='INTERVIEW_SCHEDULED'}"
+						ng-click="fetchSubmissions('INTERVIEW_SCHEDULED')">Interview
+							in Process({{statuses.INTERVIEW_SCHEDULED}})</a></li>
+					<li ng-disabled="statuses.HIRED==0"><a
+						ng-class="{'myJobsActive':status==='HIRED'}"
+						ng-click="fetchSubmissions('HIRED')">Hired({{statuses.HIRED}})</a></li>
+					<li ng-disabled="statuses.REJECTED==0"><a
+						ng-class="{'myJobsActive':status==='REJECTED'}"
+						ng-click="fetchSubmissions('REJECTED')">Rejected({{statuses.REJECTED}})</a></li>
+				</ul>
+			</div>
+
+			<div class="col-md-12"
+				style="padding-left: 0px; padding-right: 0px; padding-top: 10px; background-color: #f5f5f5;">
+				<div class="col-md-12" ng-show="viewSubmission.submmision===null">
+					No Submissions are available for this status</div>
+				<div class="col-md-3">
+					<div class="list-group">
+						<a ng-click="getSubmissionsForUser(user,$index);"
+							class="list-group-item "
+							ng-class="{'active':activeUser===$index}"
+							ng-repeat="user in viewSubmission.users"> {{user.firstName}}
+						</a>
+					</div>
+				</div>
+				<div class="col-md-9">
+					<div class="col-md-12">
+						<button
+							ng-class="{'btn btn-success active':activeSection=== $index,'btn btn-default':activeSection!== index}"
+							ng-click="changeSection($index)"
+							ng-repeat="section in viewSubmission.submmision.sections"
+							style="margin-right: 5px;">{{section.sectionName}}</button>
+
+					</div>
+					<div class="col-md-12" ng-hide="viewSubmission.submmision===null">
+						<label>Attachments : <a
+							href="submissions/filedownload?fileIs={{viewSubmission.submmision.userId}}//{{viewSubmission.submmision.resumePath}}">{{viewSubmission.submmision.resumeName}}</a></label>
+					</div>
+
+
+
+					<div class="col-md-7" ng-hide="viewSubmission.submmision===null">
+						<video preload="metadata" controls="controls"
+							class="section_player section_video" width="350" height="240"
+							ng-src="{{viewSubmission.submmision.sections[activeSection].videoPath | trustUrl}}">Your
+							browser does not support HTML5 video.
+						</video>
+
+						<div>
+							<label>Interview Date: <span
+								ng-repeat="availablity in viewSubmission.submmision.availablities"
+								ng-if="availablity.id===availabilityId"> {{
+									availablity.date | date:'MMM dd, yyyy'}} {{
+									availablity.fromTime }} </span>
+
+							</label>
+						</div>
+
+						<div>
+							<label>Submission Date:
+								{{viewSubmission.submmision.createdAt| date:'MMM dd, yyyy'}}</label>
+						</div>
+						<div class="col-xs-12">Candidate ratings:</div>
+						<div class="col-xs-12">
+							<input-stars readonly="readonly" max="5"
+								ng-model="viewSubmission.submmision.sections[activeSection].userRating"></input-stars>
+						</div>
+						<div class="col-xs-12"
+							ng-hide="status==='NEW' && userDetails.role!==2">Consulting
+							Company Rating:</div>
+						<div class="col-xs-12"
+							ng-hide="status==='NEW' && userDetails.role !== 2">
+							<input-stars readonly="readonly" max="5"
+								ng-model="viewSubmission.submmision.sections[activeSection].cmRating"></input-stars>
+						</div>
+						<div class="col-xs-12" ng-hide="status==='NEW'">Hiring
+							Manager Rating:</div>
+						<div class="col-xs-12" ng-hide="status==='NEW'">
+							<input-stars readonly="readonly" max="5"
+								ng-model="viewSubmission.submmision.sections[activeSection].hmRating"></input-stars>
+						</div>
+					</div>
+					<div class="col-md-5" style="padding-right: 0px;"
+						ng-hide="status==='SUBMITTED_HM' || (userDetails.role===1 && status==='INTERVIEW_SCHEDULED') || (status==='HIRED')">
+						<div class="col-xs-12 text-danger">{{error}}</div>
+						<div ng-show="status==='NEW'" class="col-xs-12"
+							ng-repeat="section in viewSubmission.submmision.sections">
+							<div>{{section.sectionName}}:</div>
+							<input-stars max="5" ng-model="sectionRating[$index]"></input-stars>
+						</div>
+
+						<div
+							ng-hide="viewSubmission.submmision===null || (userDetails.role===2 && status==='REJECTED' ) || status==='HIRED' || (userDetails.role===1 && status==='INTERVIEW_SCHEDULED') "
+							class="btn-group" role="group" aria-label="...">
+							<button type="button" ng-click="toStatus('SUBMITTED_HM')"
+								ng-class="{'btn btn-success active':statusToMove==='SUBMITTED_HM','btn btn-default':statusToMove!== 'SUBMITTED_HM'}"
+								ng-if="userDetails.role===1 && (status==='NEW' || status==='PARK' || status==='REJECTED' ) && status!=='SUBMITTED_HM'">Submit
+								To HM</button>
+							<button type="button" ng-click="toStatus('HIRED')"
+								ng-class="{'btn btn-success active':statusToMove==='HIRED','btn btn-default':statusToMove!== 'HIRED'}"
+								ng-if="(userDetails.role===2 && (status==='NEW' || status==='INTERVIEW_SCHEDULED' || status==='PARK')) ">Hire</button>
+							<button type="button" ng-click="toStatus('INTERVIEW_SCHEDULED')"
+								ng-class="{'btn btn-success active':statusToMove==='INTERVIEW_SCHEDULED','btn btn-default':statusToMove!== 'INTERVIEW_SCHEDULED'}"
+								ng-hide="status==='INTERVIEW_SCHEDULED'"
+								ng-if="userDetails.role===2">Interview</button>
+							<button type="button" ng-click="toStatus('INTERVIEW_SCHEDULED')"
+								ng-class="{'btn btn-success active':statusToMove==='INTERVIEW_SCHEDULED','btn btn-default':statusToMove!== 'INTERVIEW_SCHEDULED'}"
+								ng-show="status==='INTERVIEW_SCHEDULED'">Edit
+								Interview</button>
+							<button type="button" ng-click="toStatus('PARK')"
+								ng-class="{'btn btn-success active':statusToMove==='PARK','btn btn-default':statusToMove!== 'PARK'}"
+								ng-hide="status==='PARK' || (userDetails.role===1 && status==='REJECTED') ">Park</button>
+							<button type="button"
+								ng-class="{'btn btn-success active':statusToMove==='REJECTED','btn btn-default':statusToMove!== 'REJECTED'}"
+								ng-hide="status==='REJECTED'" ng-click="toStatus('REJECTED')">Reject</button>
+						</div>
+						<textarea style="margin-top: 5px;" class="form-control" rows="3"
+							ng-show="rejectFlag" placeholder="Comment for rejection"
+							ng-model="rejectionText"></textarea>
+
+						<div class="col-md-12"
+							ng-if="statusToMove==='INTERVIEW_SCHEDULED'">
+
+							<label class="text-danger">{{processError}}</label>
+
+							<div ng-if="viewSubmission.submmision.notes">
+								<label style="text-decoration: underline;"><em>Notes:</em></label>
+								{{viewSubmission.submmision.notes}}
+							</div>
+
+							<div>
+								<label style="text-decoration: underline;"><em>Avalabilities:</em></label>
+							</div>
+							<div
+								ng-repeat="available in viewSubmission.submmision.availablities">
+								<label class="radio-inline"> <input type="checkbox"
+									name="interviewAvailability" id="{{available.id}}"
+									value="{{available.id}}"
+									ng-checked="availabilityId.indexOf(available.id)>-1?true:false"
+									ng-click="assignAvailabilityId(available.id);" /> Available on
+									<strong>{{available.date| date:'EEEE - MMM dd, yyyy'}}
+								</strong> from <strong>{{available.fromTime}} </strong> to <strong>{{available.toTime}}
+										{{available.timeZone}}</strong>
+								</label>
+							</div>
+							<div>
+								<button
+									ng-show="viewSubmission.submmision!==null && (status==='INTERVIEW_SCHEDULED' || status === 'NEW' || status === 'PARK')"
+									class="btn btn-primary  active" style="margin-top: 10px;"
+									ng-click="editAvailabilities();">Edit Availabilities</button>
+							</div>
+
+							<div>
+								<label style="text-decoration: underline;"><em>Interview
+										Mode:</em></label>
+							</div>
+
+							<label ng-click="assignInterviewMode('INPERSON');"
+								class="radio-inline" style="margin-left: 10px;"> <input
+								type="radio" name="interviewMode" id="inPerson" value="INPERSON"
+								ng-model="interviewMode"> In Person
+							</label> <label ng-click="assignInterviewMode('VIDEO_CONFERENCING');"
+								class="radio-inline"> <input type="radio"
+								name="interviewMode" id="videoConferencing"
+								value="VIDEO_CONFERENCING" ng-model="interviewMode">
+								Video Conferencing
+							</label> <label ng-click="assignInterviewMode('TELE_CONFERENCING');"
+								class="radio-inline"> <input type="radio"
+								name="interviewMode" id="teleConferencing"
+								value="TELE_CONFERENCING" ng-model="interviewMode">
+								Tele-Conferencing
+							</label>
+
+						</div>
+
+						<button
+							ng-show="viewSubmission.submmision!==null && (status==='NEW' || status==='PARK' || ( userDetails.role===1 && status==='REJECTED') || status==='INTERVIEW_SCHEDULED' )"
+							class="btn btn-primary btn-block active"
+							style="margin-top: 10px;" ng-click="submitRating();">Submit</button>
+
+						<div ng-repeat="comment in viewSubmission.submmision.comments"
+							ng-if="status==='REJECTED'">
+							<label>{{comment.role==='1'? 'Consultancy
+								Manager:':'Hiring Manager:'}}</label> {{comment.comment}}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+

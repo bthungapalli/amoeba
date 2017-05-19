@@ -1,0 +1,54 @@
+
+<section id="templates" class="content-header">
+	<div class="row">
+		<div class="col-md-12">
+
+			<div class="col-md-12">
+
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+					<div class="input-group">
+						<input type="text" class="form-control"
+							placeholder="Type Here to Filter Templates" ng-model="search"
+							aria-describedby="basic-addon2"> <span
+							class="input-group-addon glyphicon glyphicon-filter"></span>
+					</div>
+				</div>
+				<div class="col-md-2"></div>
+			</div>
+			</br>
+			</br> <a ui-sref="main.newTemplate" class="btn  btn-success pull-right"
+				role="button">New Template</a>
+			<table id="newTemplate"
+				class="table table-striped table-bordered centerAlign">
+				<thead>
+					<tr>
+						<th class="bg-primary">NAME</th>
+						<th class="bg-primary">ACTIONS</th>
+					</tr>
+				</thead>
+				<tbody>
+
+					<tr
+						dir-paginate="template in templates| filter:search| itemsPerPage: 10 ">
+						<td>{{template.templateName}}</td>
+
+						<td>
+							<button ng-click="editOrShow(template,'main.showTemplate');"
+								class="btn btn-xs btn-primary">Show</button>
+							<button ng-click="editOrShow(template,'main.editTemplate');"
+								class="btn btn-xs btn-primary">Edit</button>
+							<button type="button" ng-click="deleteTemplate(template,$index);"
+								class="btn btn-xs btn-primary">Delete</button>
+						</td>
+					</tr>
+
+				</tbody>
+
+			</table>
+			<dir-pagination-controls style="position: relative;left: 40%;"></dir-pagination-controls>
+		</div>
+		<!-- /.col -->
+	</div>
+	<!-- /.row -->
+</section>

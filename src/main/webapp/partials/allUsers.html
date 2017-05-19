@@ -1,0 +1,65 @@
+
+<section id="allUsers" class="content-header">
+	<div class="col-md-12">
+
+		<div class="col-md-2"></div>
+		<div class="col-md-8">
+			<div class="input-group">
+				<input type="text" class="form-control"
+					placeholder="Type Here to Filter Users" ng-model="search"
+					aria-describedby="basic-addon2"> <span
+					class="input-group-addon glyphicon glyphicon-filter"></span>
+			</div>
+		</div>
+		<div class="col-md-2"></div>
+	</div>
+	</br> </br>
+	<div class="row">
+		<div class="col-md-12">
+
+			<a ui-sref="main.newUser" class="btn btn-success pull-right"
+				role="button">New User</a>
+			<table id="allUsersTable"
+				class="table table-striped table-bordered centerAlign"
+				style="margin-bottom: 0px;">
+				<thead>
+					<tr>
+						<th class="bg-primary">ID</th>
+						<th class="bg-primary">NAME</th>
+						<th class="bg-primary">EMAIL</th>
+						<th class="bg-primary">ROLE</th>
+						<th class="bg-primary">VERIFICATION</th>
+						<th class="bg-primary">ACTION</th>
+					</tr>
+				</thead>
+				<tbody>
+
+					<tr
+						dir-paginate="user in allUsers | filter:search| itemsPerPage: 10 ">
+						<td>{{user.id}}</td>
+						<td>{{user.firstName}}</td>
+						<td>{{user.email}}</td>
+						<td>{{user.role}}</td>
+						<td><span class="label label-success"
+							ng-show="user.verification">Verified</span> <span
+							ng-show="!user.verification">UnVerified</span></td>
+						<td>
+							<button ng-show="!user.verification" type="button"
+								ng-click="activateUser(user,$index);" class="btn btn-primary">Verify</button>
+							<button ng-show="user.verification" type="button"
+								ng-click="deActivateUser(user,$index);" class="btn btn-danger">Deactivate</button>
+						</td>
+					</tr>
+
+				</tbody>
+
+			</table>
+			<dir-pagination-controls style="position: relative;left: 40%;"></dir-pagination-controls>
+		</div>
+
+		<!-- /.col -->
+	</div>
+	<!-- /.row -->
+	<br> <br>
+
+</section>

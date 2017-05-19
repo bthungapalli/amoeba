@@ -1,0 +1,48 @@
+ <div class="row">
+	<div class="col-md-12">
+	<form name="loginForm" ng-submit="adminLogin();">
+		<div class="loginFields">
+		<span class="glyphicon glyphicon-user  bg-primary"></span> 
+		<input name="emailId" type="email" placeholder="User Name" ng-model="userDetails.emailId" required="required"/>
+		
+		</div>
+		<div class="loginFields">
+		<span class="glyphicon glyphicon-lock  bg-primary"></span>
+		<input type="password" placeholder="Password" ng-model="userDetails.password" required="required"/>
+		
+		</div>
+		<button type="submit" class="btn btn-block btn-success active" >
+		<i class="glyphicon glyphicon-lock"></i>  Secure Login</button>
+		</form>
+		</div>
+		</div>
+		
+<!-- 		<div class="checkbox" style="margin-bottom: 0px;">
+		<label > <input  ng-checked="rememberMe"  ng-click="rememberMe1();" type="checkbox"> Remember me
+		</label>
+		
+		</div>
+		<div class="col-md-12" style="padding-left: 0px;padding-right: 0px;">
+		<a ui-sref="login.forgotPassword" 
+			ng-click="assignState('login.forgotPassword');resetUserDetails();resetMessages();checkForRememberMe();">Forgot Password ?</a><br>
+		<a ui-sref="login.confirmationInstructions" 
+			ng-click="assignState('login.confirmationInstructions');resetUserDetails();resetMessages();checkForRememberMe();">Didn't receive confirmation instructions ?</a>
+		
+		</div>
+		<div>
+		<input type="radio" required="required">
+			<span class="glyphicon glyphicon-user bg-primary"></span>
+		<input type="radio" required="required">
+			<span class="glyphicon glyphicon-girl bg-primary"></span>
+		
+		</div>
+		<button type="submit" class="btn btn-block btn-success active" >
+		<i class="glyphicon glyphicon-lock"></i>  Secure Login</button>
+		<br>
+
+			<button type="button" class="btn  btn-defualt active" ng-click="defaultLogins('bthungapalli@nisum.com','123456');"> HM Auto Login</button>
+		<button type="button" class="btn  btn-defualt active" ng-click="defaultLogins('bthungapalli@osius.com','123456');"> CM Auto Login</button>
+		<button type="button" class="btn  btn-defualt active" ng-click="defaultLogins('jayabharani@gmail.com','123456');"> Candidate Auto Login</button>
+	</form>
+	</div>
+</div> -->

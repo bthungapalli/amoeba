@@ -1,0 +1,29 @@
+{
+  "name": "amoeba",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bthungapalli/amoeba.git"
+  },
+  "author": "vn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bthungapalli/amoeba/issues"
+  },
+  "homepage": "https://github.com/bthungapalli/amoeba#readme",
+  "dependencies": {
+    "bower": "^1.7.9",
+    "grunt": "^1.0.1"
+  },
+  "devDependencies": {
+    "eslint-html-reporter": "^0.5.2",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-eslint": "^19.0.0",
+    "load-grunt-tasks": "^3.5.2"
+  }
+}

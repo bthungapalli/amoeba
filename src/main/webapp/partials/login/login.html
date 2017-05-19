@@ -1,0 +1,62 @@
+<!-- <span id="faqAndMail"> <span
+	class="glyphicon glyphicon-question-sign bg-primary"><label></label></span>
+	<span class="glyphicon glyphicon-envelope bg-primary"><label></label></span>
+</span> -->
+<!-- <div class="row">
+	<div class="col-md-12">
+		<div class="row"> -->
+			<!-- <div class="col-md-6">
+				<img alt="Vresume image" src="images/login.png"
+					style="height: 96vh; width: 100%">
+			</div> -->
+			<div class="col-md-5">
+				<div class="row"
+					style="min-height: 38vh; padding-left: 15px; padding-right: 15px;">
+					<div class="col-md-12">
+
+						<img  height="350cm" width="600cm"  alt="amoeba image" src="images/logo.png"
+							style="margin-top: 10%">
+					</div>
+				</div>
+				<div dw-loading="login"
+					dw-loading-options="{text: '',spinnerOptions: {lines: 12, length: 15,  width: 5, radius: 15,color:'#3c8dbc'}}">
+
+					<div class="row" style="padding-left: 15px; padding-right: 15px;">
+						<div class="col-md-12">
+
+							<div class="row">
+								<div class="col-md-12 loginOptions">
+									<a ui-sref=".loginTemplate"
+										ng-click="assignState('login.loginTemplate');resetUserDetails();resetMessages();checkForRememberMe();"
+										ng-class="{'loginOptionsActive':activeState==='login.loginTemplate'}">LOGIN</a>
+									<a ui-sref=".signupTemplate"
+										ng-click="assignState('login.signupTemplate');resetUserDetails();resetMessages();"
+										ng-class="{'loginOptionsActive':activeState==='login.signupTemplate'}">SIGNUP</a>
+									<!-- <a ui-sref=".adminLoginTemplate"
+										ng-click="assignState('login.adminLoginTemplate');"
+										ng-class="{'loginOptionsActive':activeState==='login.adminLoginTemplate'}">ADMIN LOGIN</a> -->
+								</div>
+
+								<div ng-messages="loginMessageDetails.errorMessage"
+									class="col-md-12 text-danger">
+									<div ng-message="login">{{loginMessageDetails.errorMessage.login}}</div>
+									<div ng-message="signup_emailId">{{loginMessageDetails.errorMessage.signup_emailId}}</div>
+									<div ng-message="signup_confirmPassword">{{loginMessageDetails.errorMessage.signup_confirmPassword}}</div>
+								</div>
+
+								<div ng-messages="loginMessageDetails.successMessage"
+									class="col-md-12 text-success">
+									<div ng-message="signup_emailId">{{loginMessageDetails.successMessage.signup_emailId}}</div>
+								</div>
+							</div>
+
+							<div ui-view></div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-1"></div>
+		<!-- </div>
+	</div>
+</div> -->

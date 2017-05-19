@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="expires" content=“0” />
+<title>:: amoeba ::</title>
+
+<link rel="stylesheet"
+	href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="css/font-awesome.min.css">
+
+<link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/app.css">
+
+<link rel="stylesheet" href="css/skin-blue.css">
+<link rel="stylesheet"
+	href="bower_components/angular-input-stars-directive/angular-input-stars.css">
+<link rel="stylesheet"
+	href="bower_components/angular-loading/angular-loading.css">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+  <script src="js/html5shiv.min.js"></script>
+  <script src="js/respond.min.js"></script>
+  <![endif]-->
+
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+
+
+	<div dw-loading="register" style="min-height: 100vh;"
+		dw-loading-options="{text: '',spinnerOptions: {lines: 12, length: 15,  width: 5, radius: 15,color:'#3c8dbc'}}">
+		<div ui-view></div>
+		<div ng-include="'partials/footer.html'"></div>
+
+	</div>
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="bower_components/angular/angular.min.js"></script>
+	<script src="bower_components/angular-route/angular-route.min.js"></script>
+	<script
+		src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+	<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+	<script
+		src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+	<script
+		src="bower_components/angular-input-stars-directive/angular-input-stars.js"></script>
+	<script src="bower_components/angularUtils-pagination/dirPagination.js"></script>
+	<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+	<script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
+	<script src="js/spin.min.js"></script>
+	<script src="bower_components/angular-loading/angular-loading.min.js"></script>
+	<script type="text/javascript"
+		src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAhUJCXzcyaMRC_HnRyog3BuT9eYKb497s"></script>
+
+	<script src="js/tinymce/tinymce.min.js"></script>
+
+
+	<script src="js/app.min.js"></script>
+	<script src="dist/amoeba.js"></script>
+
+</body>
+</html>
+
+

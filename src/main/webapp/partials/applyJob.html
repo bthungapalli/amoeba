@@ -1,0 +1,145 @@
+<form name="applyJobForm" ng-submit="applyJob();">
+	<section class="content">
+		<div class="row">
+			<div class="col-md-12">
+				<h2 class="text-left text-primary"
+					style="margin-left: 0px; margin-right: 0px; margin-bottom: 8px; margin-top: 8px; text-decoration: underline;">{{opening.title}}</h2>
+			</div>
+		</div>
+		<p class="text-danger">{{error}}</p>
+		<div class="row" ng-repeat="section in sections.split(',')"
+			style="border-bottom: 1px solid #ccc; margin-left: 0px; margin-right: 0px; margin-bottom: 8px; margin-top: 8px;">
+			<div class="col-md-3">
+				<h3 ng-init="assignSectionName(section,$index);"
+					class="text-left text-primary"
+					style="margin-bottom: 10px; margin-top: 10px;">{{section}}</h3>
+			</div>
+			<div class="col-md-4">
+				<div class="text-danger"
+					ng-if="resume.sections[$index].videoFileInvalidFormat"
+					style="font-size: smaller; font-weight: bolder;">{{resume.sections[$index].videoFileInvalidFormat}}</div>
+				<div class="text-danger"
+					ng-if="resume.sections[$index].videoFileInvalidSize"
+					style="font-size: smaller; font-weight: bolder;">{{resume.sections[$index].videoFileInvalidSize}}</div>
+				<div class="text-danger"
+					ng-if="resume.sections[$index].videoFileInvalidDuration"
+					style="font-size: smaller; font-weight: bolder;">{{resume.sections[$index].videoFileInvalidDuration}}</div>
+				<label style="margin-bottom: 0px;">Video Resume<label
+					class="text-red" style="margin-bottom: 0px;">*</label></label> <input
+					class="white" name="file{{$index}}" type="file"
+					file-model="resume.sections[$index].videoFile" required="required" />
+				<div id="infos"></div>
+				<div style="font-size: xx-small;">Formats: mp4, webm, ogg, ogv/div>
+				div style="font-size: xx-small;">Size limit:10 MB </div>
+         <div style="font-size: xx-small;font-style: italic;">For MP4 formats, Please use Chrome or Safari </div>
+		</div>
+		<div class="col-md-4">
+		<label style="margin-bottom: 0px;">Rating<label class="text-red" style="margin-bottom: 0px;">*</label></label><br>
+		  <input-stars max="5" ng-model="resume.sections[$index].userRating"></input-stars>
+		</div>
+	</div>
+	
+	
+		<div class="row" style="border-bottom: 1px solid #ccc;margin-left: 0px;margin-right: 0px;margin-bottom: 8px;margin-top: 8px;">
+		<div class="col-md-3">
+			<h3 class="text-left text-primary">
+				Interview Availability
+			</h3>
+		</div>
+		<div class="col-md-3" >
+		<label>Select Date For Interview<label class="text-red" style="margin-bottom: 0px;">*</label></label>
+		<p class="input-group" style="margin-bottom: 24px;">
+        <input type="text" name="avail1" required="required" readonly="readonly" ng-click="popup1.opened=!popup1.opened" class="form-control col-md-6" uib-datepicker-popup="EEEE - MMM dd, yyyy"   ng-model="resume.interviewAvailability[0].date" is-open="popup1.opened"  datepicker-options="dateOptions.first"  close-text="Close" placeholder="Select Date" date-disabled="disabled(date, mode)"/>
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="popup1.opened=!popup1.opened"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+         
+        </p>
+        <p class="input-group" style="margin-bottom: 24px;">
+        <input required="required" name="avail2" type="text" readonly="readonly" ng-click="popup2.opened=!popup2.opened"  class="form-control col-md-6" uib-datepicker-popup="EEEE - MMM dd, yyyy" ng-model="resume.interviewAvailability[1].date" is-open="popup2.opened" datepicker-options="dateOptions.second"  close-text="Close"  placeholder="Select Date" date-disabled="disabled(date, mode)"/>
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="popup2.opened=!popup2.opened"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </p>
+        <p class="input-group" style="margin-bottom: 24px;">
+        <input required="required" name="avail3" type="text" readonly="readonly"  ng-click="popup3.opened=!popup3.opened"  class="form-control col-md-6" uib-datepicker-popup="EEEE - MMM dd, yyyy" ng-model="resume.interviewAvailability[2].date" is-open="popup3.opened" datepicker-options="dateOptions.third"  close-text="Close"  placeholder="Select Date"/>
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="popup3.opened=!popup3.opened"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </p>
+		</div>
+		
+		<div class="col-md-2">
+		<p>
+		<label>Start Time<label class="text-red" style="margin-bottom: 0px;">*</label></label>
+		<select class="form-control " ng-model="resume.interviewAvailability[0].from" required="required" ng-change="setEndTime(0);" style="margin-bottom: 23px;">
+					<option ng-repeat="time in startDate">{{time}}</option>
+		</select>
+		<select class="form-control " ng-model="resume.interviewAvailability[1].from" required="required" ng-change="setEndTime(1);" style="margin-bottom: 23px;">
+						<option ng-repeat="time in startDate">{{time}}</option>
+		 </select>
+		 <select  class="form-control " ng-model="resume.interviewAvailability[2].from" required="required" ng-change="setEndTime(2);" style="margin-bottom: 23px;">
+						<option ng-repeat="time in startDate">{{time}}</option>
+		 </select>		
+	 </p>
+	 </div>
+	 <div class="col-md-2">
+	 <p>
+	 <label>End Time<label class="text-red" style="margin-bottom: 0px;">*</label></label>
+		 <select class="form-control " ng-model="resume.interviewAvailability[0].to" ng-change="checkInvalidEndTime(0);"  ng-disabled="resume.interviewAvailability[0].invalid" required="required" style="margin-bottom: 23px;">
+						<option ng-repeat="time in endDate1[0]">{{time}}</option>
+			</select>
+		<select  class="form-control" ng-model="resume.interviewAvailability[1].to" ng-change="checkInvalidEndTime(1);" ng-disabled="resume.interviewAvailability[1].invalid" required="required" style="margin-bottom: 23px;">
+						<option ng-repeat="time in endDate1[1]">{{time}}</option>
+		 </select>	
+		 <select class="form-control" ng-model="resume.interviewAvailability[2].to"  ng-change="checkInvalidEndTime(2);" ng-disabled="resume.interviewAvailability[2].invalid" required="required" style="margin-bottom: 23px;">
+						<option ng-repeat="time in endDate1[2]">{{time}}</option>
+		 </select>				
+					</p>
+		</div>
+		<div class="col-md-2">
+	 <p>
+	 <label >Time Zone<label class="text-red" style="margin-bottom: 0px;">*</label></label>
+		 <select class="form-control" ng-model="resume.interviewAvailability[0].timeZone"   required="required" style="margin-bottom: 23px;">
+						<option ng-repeat="timeZone in timeZones">{{timeZone}}</option>
+			</select>
+		<select  class="form-control" ng-model="resume.interviewAvailability[1].timeZone" required="required" style="margin-bottom: 23px;">
+						<option ng-repeat="timeZone in timeZones">{{timeZone}}</option>
+		 </select>	
+		 <select class="form-control" ng-model="resume.interviewAvailability[2].timeZone"  required="required" style="margin-bottom: 23px;">
+						<option ng-repeat="timeZone in timeZones">{{timeZone}}</option>
+		 </select>				
+					</p>
+		</div>
+	</div>
+	<div class="row" style="margin-left: 0px;margin-right: 0px;margin-bottom: 8px;margin-top: 8px;">
+		<div class="col-md-3">
+			<h3 class="text-left text-primary">
+				Attachments 
+			</h3>
+		</div>
+		<div class="col-md-8">
+		<label style="margin-bottom: 0px;">Notes</label>
+		<textarea class="form-control" rows="3" placeholder="Notes:" ng-model="resume.notes"></textarea>
+		<label class="text-danger">{{resume.attachmentInvalidFormat}}</label>
+		<label class="text-danger">{{resume.attachmentInvalidSize}}</label>
+		<label style="margin-bottom: 0px;">Resume<label class="text-red" style="margin-bottom: 0px;">*</label></label>
+		 <input class="white" name="attachment" type="file" file-model="resume.attachment"  required="required"/>
+		 	 <div style="font-size: xx-small;"> Formats: doc, docx</div>
+		   <div style="font-size: xx-small;">Size limit:1 MB </div>
+		   <label style="margin-bottom: 0px;">Cover Letter Name<label class="text-red" style="margin-bottom: 0px;">*</label></label>
+         <input type="text" class="form-control" ng-model="resume.attachmentName" placeholder="eg: Resume, Cover Letter" required="required">
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-md-12 text-center">
+			<button type="submit" class="btn btn-primary btn-default active"  ng-disabled="resume.interviewAvailability[0].invalid || resume.interviewAvailability[1].invalid || resume.interviewAvailability[2].invalid || applyJobForm.$invalid">
+				Apply
+			</button>
+		</div>
+	</div>
+   <br><br>
+ 
+	</section>
+ </form>
