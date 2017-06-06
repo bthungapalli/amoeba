@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.js.amoeba.dao.FormDao">
+
+	<resultMap type="com.js.amoeba.domain.Form" id="form">
+		<result column="f_id" property="f_id"/>
+		<result column="age" property="age"/>
+		<result column="weight" property="weight"/>
+		<result column="height" property="height"/>
+		<result column="reportDescription"  property="reportDescription"/>
+		<result  column="title"  property="title"/>
+		<result column="spec_Id" property="spec_Id"/>
+		<result column="mainCat_Id" property="mainCat_Id"/>
+		<result column="subSpec_Id" property="subSpec_Id"/>
+		<result column="status" property="status"/>
+		<result column="c_id" property="c_id"/>
+		<result column="user_id" property="user_id"/>
+		<collection property="user" column="user_id" select="getUser" autoMapping="true"></collection>
+	</resultMap>
+	
+	<select id="getUser" resultType="com.js.amoeba.domain.User" parameterType="com.js.amoeba.domain.User">
+		select * from users where userId=#{user_id}
+	
+	</select>
+	 
+	
+	<insert id="saveForm"  parameterType="com.js.amoeba.domain.Form">
+
+	insert into userform (age,weight,height,mainCat_Id,spec_Id,subSpec_Id,user_id,status,reportDescription,title,submittedAt) 
+		values(#{age},#{weight},#{height},#{mainCat_Id},#{spec_Id},#{subSpec_Id},#{user_id},#{status},#{reportDescription},#{title},NOW())
+	
+	</insert>
+	
+	<select id="getUserFormById" resultType="com.js.amoeba.domain.Form" parameterType="com.js.amoeba.domain.Form" resultMap="form">
+		select f.*,u.* from userform f ,  users u where f.user_id=u.userId and f.f_id=#{f_id} 
+	
+	</select>
+	
+	<select id="getFormById" resultType="com.js.amoeba.domain.Form" parameterType="com.js.amoeba.domain.Form" >
+		select f.* from userform f  where f.user_id=#{user_id} 
+	
+	</select>
+
+	
+
+</mapper>

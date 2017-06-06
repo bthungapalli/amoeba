@@ -1,9 +1,9 @@
 (function(){
 	
-	var appModule=angular.module('vResume',['ui.bootstrap','ngRoute','ui.router','angular-input-stars','angularUtils.directives.dirPagination','ngCookies','darthwade.dwLoading','vResume.login','vResume.main','vResume.profile','vResume.templates','vResume.myJobs','vResume.users','vResume.openings']);
+	var appModule=angular.module('amoeba',['ui.bootstrap','ngRoute','ui.router','angular-input-stars','angularUtils.directives.dirPagination','ngCookies','darthwade.dwLoading','amoeba.login','amoeba.main','amoeba.profile','amoeba.form']);
 
 	angular.element(document).ready(function() {
-	    angular.bootstrap("body", ['vResume']);
+	    angular.bootstrap("body", ['amoeba']);
 	 });
 	
 	appModule.config(function($stateProvider, $urlRouterProvider,$httpProvider){
@@ -11,7 +11,7 @@
 		$httpProvider.interceptors.push([function(){
 		    return {
 		        request: function(config){
-		            if(config.url.indexOf('partials/') > -1 || config.url.indexOf('dist/vResume.js') > -1){
+		            if(config.url.indexOf('partials/') > -1 || config.url.indexOf('dist/amoeba.js') > -1){
 		                var separator = config.url.indexOf('?') === -1 ? '?' : '&';
 		                config.url = config.url + separator + 'c=' + new Date();
 		            }
@@ -44,14 +44,14 @@
 	            url: '/profile',
 	            controller:'profileController',
 	            templateUrl: 'partials/profile/profile.html'
-	    }).state('main.openings', {
-            url: '/openings',
-            controller:'openingsController',
-            templateUrl: 'partials/openings.html'
-        }).state('main.templates', {
-            url: '/templates',
-            controller:'templatesController',
-            templateUrl: 'partials/templates.html'
+	    }).state('main.form', {
+            url: '/form',
+            controller:'formController',
+            templateUrl: 'partials/submitReports.html'
+        }).state('main.submitedForms', {
+            url: '/submitedForms',
+            controller:'myFormController',
+            templateUrl: 'partials/mySubmissions.html'
         }).state('main.myJobs', {
             url: '/myJobs',
             controller:'myJobsController',

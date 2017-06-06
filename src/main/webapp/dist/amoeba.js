@@ -1,6 +1,6 @@
 (function(){
 	
-	var appModule=angular.module('amoeba',['ui.bootstrap','ngRoute','ui.router','angular-input-stars','angularUtils.directives.dirPagination','ngCookies','darthwade.dwLoading','amoeba.login','amoeba.main','amoeba.profile','amoeba.templates','amoeba.myJobs','amoeba.users','amoeba.openings']);
+	var appModule=angular.module('amoeba',['ui.bootstrap','ngRoute','ui.router','angular-input-stars','angularUtils.directives.dirPagination','ngCookies','darthwade.dwLoading','amoeba.login','amoeba.main','amoeba.profile','amoeba.form']);
 
 	angular.element(document).ready(function() {
 	    angular.bootstrap("body", ['amoeba']);
@@ -44,14 +44,14 @@
 	            url: '/profile',
 	            controller:'profileController',
 	            templateUrl: 'partials/profile/profile.html'
-	    }).state('main.openings', {
-            url: '/openings',
-            controller:'openingsController',
-            templateUrl: 'partials/openings.html'
-        }).state('main.templates', {
-            url: '/templates',
-            controller:'templatesController',
-            templateUrl: 'partials/templates.html'
+	    }).state('main.form', {
+            url: '/form',
+            controller:'formController',
+            templateUrl: 'partials/submitReports.html'
+        }).state('main.submitedForms', {
+            url: '/submitedForms',
+            controller:'myFormController',
+            templateUrl: 'partials/mySubmissions.html'
         }).state('main.myJobs', {
             url: '/myJobs',
             controller:'myJobsController',
@@ -133,27 +133,12 @@
 
 (function(){
 	
-	angular.module('amoeba.myJobs',[]);
-})();
-
-(function(){
-	
-	angular.module('amoeba.openings',[]);
-})();
-
-(function(){
-	
 	angular.module('amoeba.profile',[]);
 })();
 
 (function(){
 	
-	angular.module('amoeba.templates',[]);
-})();
-
-(function(){
-	
-	angular.module('amoeba.users',[]);
+	angular.module('amoeba.form',[]);
 })();
 
 (function(){
@@ -161,92 +146,13 @@
 	angular.module('amoeba.login').constant("LOGIN_CONSTANTS",{
 		"LOGIN_URL":"/amoeba/login",
 		"SIGNUP_URL":"/amoeba/registration",
-		"CHECK_EMAIL_AVAILABLE":"/amoeba/emailValidation?emailId=",
+		"CHECK_EMAIL_AVAILABLE":"/amoeba/emailValidation?email=",
 		"REGISTRATION_CONFIRMATION_URL":"/amoeba/registration/registrationConfirmation?token=",
 		"FORGOT_PASSWORD_URL":"/amoeba/forgotPassword",
 		"CONFIRMATION_INSTRUCTIONS_URL":"/amoeba/updateToken?email="
 	});
 	
 })();
-
-
-
-
-
-/*(function() {
-	  var app = angular.module('myApp', ['ui.router']);
-	  
-	  app.run(function($rootScope, $location, $state, LoginService) {
-	    $rootScope.$on('$stateChangeStart', 
-	      function(event, toState, toParams, fromState, fromParams){ 
-	          //console.log('Changed state to: ' + toState);
-	      });
-	    
-	      if(!LoginService.isAuthenticated()) {
-	        $state.transitionTo('login');
-	      }
-	  });
-	  
-	  app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
-	    $urlRouterProvider.otherwise('/home');
-	    
-	    $stateProvider
-	      .state('login', {
-	        url : '/login',
-	        templateUrl : 'login.html',
-	        controller : 'LoginController'
-	      })
-	      .state('home', {
-	        url : '/home',
-	        templateUrl : 'home.html',
-	        controller : 'HomeController'
-	      });
-	  }]);
-
-	  app.controller('LoginController', function($scope, $rootScope, $stateParams, $state, LoginService) {
-	    $rootScope.title = "AngularJS Login Sample";
-	    
-	    $scope.formSubmit = function() {
-	      if(LoginService.login($scope.username, $scope.password)) {
-	        $scope.error = '';
-	        $scope.username = '';
-	        $scope.password = '';
-	        $state.transitionTo('home');
-	      } else {
-	        $scope.error = "Incorrect username/password !";
-	      }   
-	    };
-	    
-	  });
-	  
-	  app.controller('HomeController', function($scope, $rootScope, $stateParams, $state, LoginService) {
-	    $rootScope.title = "AngularJS Login Sample";
-	    
-	  });
-	  
-	  app.factory('LoginService', function() {
-	    var admin = 'admin';
-	    var pass = 'pass';
-	    var isAuthenticated = false;
-	    
-	    return {
-	      login : function(username, password) {
-	        isAuthenticated = username === admin && password === pass;
-	        return isAuthenticated;
-	      },
-	      isAuthenticated : function() {
-	        return isAuthenticated;
-	      }
-	    };
-	    
-	  });
-	})();
-
-*/
-
-
-
-
 
 (function(){
 	
@@ -273,7 +179,9 @@
 				"emailId" : "",
 				"password" : "",
 				"confirmPassword" : "",
-				"role" : 0
+				"role" : 0,
+				"gender":"",
+				"address":""
 			};
 		};
 		
@@ -307,14 +215,15 @@
 		$scope.checkForRememberMe();
 		
 		$scope.roles=loginService.getRoles();
+		$scope.gender=loginService.getGender();
 		
 		
-		$scope.checkEmailAvailable=function(){
+		$scope.checkemailIdAvailable=function(){
 			$scope.loginMessageDetails.errorMessage.signup_emailId="";
 			if($scope.userDetails.emailId!==""){
-				loginFactory.checkEmailAvailable($scope.userDetails.emailId).then(function(response){
+				loginFactory.checkemailIdAvailable($scope.userDetails.emailId).then(function(response){
 					if(response[0]==='alreadyExist'){
-						$scope.loginMessageDetails.errorMessage.signup_emailId="Email Id already exist.";
+						$scope.loginMessageDetails.errorMessage.signup_emailId="emailId Id already exist.";
 					}else{
 						$scope.resetMessages();
 					}
@@ -352,7 +261,7 @@
 				}
 				 $loading.finish('login');
 			}).catch(function(error){
-				$scope.loginMessageDetails.errorMessage.login="Either Email or Password is incorrect ";
+				$scope.loginMessageDetails.errorMessage.login="Either emailId or Password is incorrect ";
 				$loading.finish('login');
             });
 		};
@@ -374,25 +283,10 @@
 				}
 				 $loading.finish('login');
 			}).catch(function(error){
-				$scope.loginMessageDetails.errorMessage.login="Either Email or Password is incorrect ";
+				$scope.loginMessageDetails.errorMessage.login="Either emailId or Password is incorrect ";
 				$loading.finish('login');
             });
 		};
-		
-		
-		/*$scope.formSubmit = function() {
-		      if(loginService.login($scope.username, $scope.password)) {
-		        $scope.error = '';
-		        $scope.username = '';
-		        $scope.password = '';
-		        $state.go('main');
-		      } else {
-		        $scope.error = "Incorrect username/password !";
-		      }   
-		    };*/
-		    
-		    
-		
 		
 		$scope.signup=function(){
 			$loading.start('login');
@@ -440,7 +334,7 @@
 	            });
 		};
 	};
-	
+	 
 	loginController.$inject=['$rootScope','$scope','$state','loginService','loginFactory','$cookies','$loading'];
 	
 	angular.module('amoeba.login').controller("loginController",loginController);
@@ -474,9 +368,9 @@
 	
 	function loginFactory($q,$http,LOGIN_CONSTANTS){
 		
-		function checkEmailAvailable(emailId){
+		function checkEmailAvailable(email){
 			var defered=$q.defer();
-			$http.get(LOGIN_CONSTANTS.CHECK_EMAIL_AVAILABLE+emailId).success(function(response) {
+			$http.get(LOGIN_CONSTANTS.CHECK_EMAIL_AVAILABLE+email).success(function(response) {
 				defered.resolve(response);
 			}).error(function(error) {
 				defered.reject(error);
@@ -496,29 +390,9 @@
 		};
 		
 		
-		
-		/*function loginService() {
-		    var admin = 'admin';
-		    var pass = 'pass';
-		    var isAuthenticated = false;
-		    
-		    return {
-		      login : function(username, password) {
-		        isAuthenticated = username === admin && password === pass;
-		        return isAuthenticated;
-		      },
-		      isAuthenticated : function() {
-		        return isAuthenticated;
-		      }
-		    };
-		    
-		  });*/
-		
-		
-		
 		function signup(loginDetails){
 			var defered=$q.defer();
-			var body =  {"email" : loginDetails.emailId,"password": loginDetails.password,"role":loginDetails.role,"firstName":loginDetails.firstName,"lastName":loginDetails.lastName,"phone":loginDetails.phone};
+			var body =  {"email" : loginDetails.emailId,"password": loginDetails.password,"role":loginDetails.role,"firstName":loginDetails.firstName,"lastName":loginDetails.lastName,"number":loginDetails.phone,"gender":loginDetails.gender,"address":loginDetails.address};
 			$http.post(LOGIN_CONSTANTS.SIGNUP_URL,body).success(function(response) {
 				defered.resolve(response);
 			}).error(function(error) {
@@ -550,7 +424,7 @@
 		
 		function confirmationInstructions(loginDetails){
 			var defered=$q.defer();
-			$http.post(LOGIN_CONSTANTS.CONFIRMATION_INSTRUCTIONS_URL+loginDetails.emailId).success(function(response) {
+			$http.post(LOGIN_CONSTANTS.CONFIRMATION_INSTRUCTIONS_URL+loginDetails.email).success(function(response) {
 				defered.resolve(response);
 			}).error(function(error) {
 				defered.reject(error);
@@ -584,11 +458,18 @@
 		
 		this.getRoles=function(){
 			var roles={
-					"Candidate":0,
-					"Consulting Manager":1,
-					"Hiring Manager":2
+					"User":0,
+					"Consultant":1
 			};
 			return roles;
+		};
+		
+		this.getGender=function(){
+			var gender={
+					"male":"male",
+					"feMale":"feMale"
+			};
+			return gender;
 		};
 		
 	};
@@ -624,7 +505,7 @@
 		$scope.error="";
 		$scope.success="";
 		
-		$scope.changePassword=function(){
+		$scope.changePassword=function(){ 
 			$scope.error="";
 			$scope.success="";
 			if($scope.changePassword.password===$scope.changePassword.confirmPassword){
@@ -649,7 +530,7 @@
 
 (function(){
 	
-	function mainController($rootScope,$scope,$state,roleService,mainFactory,$loading,myJobsService){
+	function mainController($rootScope,$scope,$state,roleService,mainFactory,$loading){
 		$loading.start("main");
 		$scope.currentView=".profile";
 		$scope.value=function(userDetails){
@@ -657,7 +538,7 @@
 			$state.go("main.profile");
 			$scope.authorities=roleService.roleAuthorities($scope.userDetails.role);
 			$loading.finish("main");
-		};
+		}; 
 		
 		if($rootScope.user===undefined){
 			mainFactory.checkUser().then(function(response){
@@ -676,9 +557,6 @@
 		};
 		
 		$scope.setSideBarActive=function(view){
-			if(view===".postJob"){
-				myJobsService.editJob=null;
-			}
 			$scope.currentView=view;
 		};
 		
@@ -688,7 +566,7 @@
 		
 	};
 	
-	mainController.$inject=['$rootScope','$scope','$state','roleService','mainFactory','$loading','myJobsService'];
+	mainController.$inject=['$rootScope','$scope','$state','roleService','mainFactory','$loading'];
 	
 	angular.module('amoeba.login').controller("mainController",mainController);
 	
@@ -764,25 +642,15 @@ angular.module('amoeba.main')
 		this.roleAuthorities = function(role) {
 			var roleAuthorities = {
 				"0" : {
-					"":["glyphicon glyphicon-user","Candidate"],
-					".openings":["glyphicon glyphicon-modal-window","Openings"],
-					".mySubmissions":["glyphicon glyphicon-share","Submissions"]
+					"":["glyphicon glyphicon-user","User"],
+					".form":["glyphicon glyphicon-modal-window","SubmitQuery"],
+					".submitedForms":["glyphicon glyphicon-share","submitedForms"]
 				} ,
 				"1" : {
-					"":["glyphicon glyphicon-user","Consulting Company"],
-					".templates":["glyphicon glyphicon-pencil","Templates"],
-					".myJobs":["glyphicon glyphicon-screenshot","My Jobs"],
-					".postJob":["glyphicon glyphicon-lock","Post Job"]
-				},
-				"2" : {
-					"":["glyphicon glyphicon-user","Hiring Manager"],
-					".templates":["glyphicon glyphicon-pencil","Templates"],
-					".myJobs":["glyphicon glyphicon-screenshot","My Jobs"],
-					".postJob":["glyphicon glyphicon-lock","Post Job"]
-				},
-				"3" : {
-					"":["glyphicon glyphicon-lock","Admin"],
-					".allUsers":["glyphicon glyphicon-modal-window","All Users"]
+					"":["glyphicon glyphicon-user","Consultant"],
+					".myForms":["glyphicon glyphicon-pencil","myForms"],
+					".activeForms":["glyphicon glyphicon-screenshot","activeForms"]
+					
 				}
 				
 			};
@@ -797,6 +665,7 @@ angular.module('amoeba.main')
 	angular.module('amoeba.main').service('roleService', roleService);
 
 })();
+
 
 (function(){
 	
@@ -813,7 +682,7 @@ angular.module('amoeba.main')
 		$scope.viewProfile=true;
 		if($scope.userDetails!==undefined){
 			$scope.profileDetails=angular.copy($scope.userDetails);
-			$scope.profileDetails.jobType=($scope.profileDetails.jobType).toString();
+			//$scope.profileDetails.jobType=($scope.profileDetails.jobType).toString();
 		}
 		
 		$scope.editProfile=function(){
@@ -877,9 +746,8 @@ angular.module('amoeba.main')
 			 payload.append('lastName', profileDetails.lastName);
 			 payload.append('phone', profileDetails.phone);
 			 payload.append('location', profileDetails.location);
-			 payload.append('specializationTitle', profileDetails.specializationTitle);
+			 payload.append('currentJobTitle', profileDetails.currentJobTitle);
 			 payload.append('currentEmployer', profileDetails.currentEmployer);
-			 payload.append('mainCategory', profileDetails.mainCategory);
 			 if(profileDetails.role===0){
 				 payload.append('middleName', profileDetails.middleName);
 				 payload.append('experience', profileDetails.experience);
@@ -943,1773 +811,165 @@ angular.module('amoeba.main')
 
 (function(){
 	
-	angular.module('amoeba.templates').constant("TEMPLATES_CONSTANTS",{
-		"FETCH_TEMPLATES_URL":"/amoeba/templates",
-		"CREATE_TEMPLATE_URL":"/amoeba/templates",
-		"DELETE_TEMPLATES_URL":"/amoeba/templates/",
-		"UPDATE_TEMPLATE_URL":"/amoeba/templates"
+	angular.module('amoeba.form').constant("FORM_CONSTANTS",{
+		
+		"SUBMIT_FORM_URL":"/amoeba/formSub",
+		
 	});
-	
-})();
-
-(function(){
-	
-	function editTemplateController(templatesService,editTemplateFactory,$scope,$compile,$state,$loading){
-		
-		var ediTemplate=angular.copy(templatesService.template);
-		ediTemplate.sections=ediTemplate.sections.split(',');
-		$scope.defaultDurations=function(){
-			var durations=[];
-			angular.forEach(ediTemplate.sections,function(section){
-				durations.push(60);
-			});
-			return durations;
-		};
-		
-		$scope.toInt=function(stringDuration){
-			var intDurations=[];
-			angular.forEach(stringDuration,function(duration){
-				intDurations.push(parseInt(duration));
-			});
-			return intDurations;
-		};
-		
-		ediTemplate.durations=ediTemplate.durations!==undefined || ediTemplate.durations!==null?$scope.toInt(ediTemplate.durations.split(',')):$scope.defaultDurations();
-		$scope.template=ediTemplate;
-		var index=ediTemplate.sections.length-1;
-		
-		$scope.addNewSection=function(){
-			$scope.template.sections[$scope.template.sections.length]="";
-			$scope.template.durations[$scope.template.durations.length]="";
-		};
-		
-		$scope.removeSection=function(id){
-			$scope.template.sections.splice(id,1);
-			$scope.template.durations.splice(id,1);
-		};
-		
-		$scope.updateTemplate=function(){
-			
-			var temp={"templateName":$scope.template.templateName,
-					"userId":ediTemplate.userId,
-                     "templateId":ediTemplate.templateId,
-					  "sections":[],
-					  "durations":[]
-			};
-			angular.forEach($scope.template.sections,function(section,index){
-				if(section.trim()!==""){
-					temp.sections.push(section);
-					temp.durations.push($scope.template.durations[index]);
-				}
-			});
-			if(temp.sections.length>0){
-				$loading.start("main");
-				editTemplateFactory.updateTemplate(temp).then(function(){
-					$loading.finish("main");
-					$state.go('main.templates');
-				}).catch(function(){
-					$loading.finish("main");
-				});
-			}
-			
-		};
-		
-		
-	};
-	
-	editTemplateController.$inject=['templatesService','editTemplateFactory','$scope','$compile','$state','$loading'];
-	
-	angular.module('amoeba.templates').controller("editTemplateController",editTemplateController);
-	
-})();
-
-(function(){
-	
-	function newTemplateController($scope,$compile,newTemplateFactory,$state,$loading){
-	    var index=1;
-		
-		$scope.initializeTemplate=function(){
-			$scope.template={
-					"templateName":"",
-					"sections":[],
-					"durations":[]
-			};
-		};
-		
-		$scope.initializeTemplate();
-		
-		$scope.addNewSection=function(){
-			    index++;
-				var element=angular.element("#newTemplateForm");
-				var section='<div id='+index+' class="form-group">'+
-				'<label for="section" class="col-sm-1 col-xs-12 control-label">Section<span class="text-red">*</span></label>'+
-				'<div class="col-sm-5 col-xs-12">'+
-				'<input type="text" class="form-control" name="section'+index+'" ng-model="template.sections['+index+']"  id="section" placeholder="Section" required="required">'+
-				'</div>'+
-				'<label for="section" class="col-sm-2 col-xs-12 control-label">Video Duration<span class="text-red">*</span></label>'+
-				'<div class="col-sm-3 col-xs-12">'+
-				'<input type="number"  min="30" max="120" class="form-control" name="duration'+index+'" ng-model="template.durations['+index+']"  id="duration" placeholder="Duration In Secs" required="required">'+
-				'</div>'+
-				'<div class="col-sm-1 col-xs-1">'+
-				'	<a class="btn btn-danger" ng-click="removeSection('+index+')" role="button"><span class="glyphicon glyphicon-remove"></span></a>'+
-				'</div>'+
-			    '</div>';
-				var elem =$compile(section)($scope);
-				element.append(elem);
-		};
-		
-		$scope.removeSection=function(id){
-			angular.element("#"+id).remove();
-		};
-		
-		$scope.createTemplate=function(){
-			var temp={"templateName":$scope.template.templateName,
-					  "sections":[],
-					  "durations":[]
-			};
-			angular.forEach($scope.template.sections,function(section,index){
-				if(section.trim()!==""){
-					temp.sections.push(section);
-					temp.durations.push($scope.template.durations[index]);
-				}
-			});
-			if(temp.sections.length>0){
-				$loading.start("main");
-				newTemplateFactory.createTemplate(temp).then(function(){
-					$scope.initializeTemplate();
-					$state.go('main.templates');
-					$loading.finish("main");
-				}).catch(function(){
-					$loading.finish("main");
-				});
-			}
-		};
-		
-	};
-	
-	newTemplateController.$inject=['$scope','$compile','newTemplateFactory','$state','$loading'];
-	
-	angular.module('amoeba.templates').controller("newTemplateController",newTemplateController);
-	
-})();
-
-(function(){
-	
-	function showTemplateController(templatesService,$scope){
-		$scope.template=templatesService.template;
-	};
-	
-	showTemplateController.$inject=['templatesService','$scope'];
-	
-	angular.module('amoeba.templates').controller("showTemplateController",showTemplateController);
-	
-})();
-
-(function(){
-	
-	function templatesController($scope,templatesFactory,$state,templatesService,$loading){
-		$loading.start("main");
-		templatesFactory.fetchTemplates().then(function(response){
-			$scope.templates=response;
-			$loading.finish("main");
-		}).catch(function(){
-			
-		});
-		
-		$scope.editOrShow=function(templateObj,view){
-			templatesService.template=templateObj;
-			$state.go(view);
-		};
-		
-		$scope.deleteTemplate=function(template,index){
-			$loading.start("main");
-			templatesFactory.deleteTemplate(template.templateId).then(function(){
-				$scope.templates.splice(index,1);
-				$loading.finish("main");
-			}).catch(function(){
-				$loading.finish("main");
-			});
-		};
-	};
-	
-	templatesController.$inject=['$scope','templatesFactory',"$state",'templatesService','$loading'];
-	
-	angular.module('amoeba.templates').controller("templatesController",templatesController);
-	
-})();
-
-(function(){
-	
-	function editTemplateFactory(TEMPLATES_CONSTANTS,$q,$http){
-		
-		function updateTemplate(template){
-			var tempTemplate=angular.copy(template);
-			tempTemplate.sections=tempTemplate.sections.toString();
-			tempTemplate.durations=tempTemplate.durations.toString();
-			var defered=$q.defer();
-			$http.put(TEMPLATES_CONSTANTS.UPDATE_TEMPLATE_URL,tempTemplate).success(function(response){
-				 defered.resolve(response);
-			}).error(function(error){
-				 defered.reject(error);
-			});
-			return defered.promise;
-		};
-		
-		return{
-			updateTemplate:updateTemplate
-		};
-	};
-	
-	editTemplateFactory.$inject=['TEMPLATES_CONSTANTS','$q','$http'];
-	
-	angular.module('amoeba.templates').factory('editTemplateFactory',editTemplateFactory);
-	
-})();
-
-
-
-
-
-(function(){
-	
-	function newTemplateFactory(TEMPLATES_CONSTANTS,$q,$http){
-		function createTemplate(template){
-			template.sections=template.sections.toString();
-			template.durations=template.durations.toString();
-			var defered=$q.defer();
-			$http.post(TEMPLATES_CONSTANTS.CREATE_TEMPLATE_URL,template).success(function(response){
-				 defered.resolve(response);
-			}).error(function(error){
-				 defered.reject(error);
-			});
-			return defered.promise;
-		};
-		
-		return{
-			createTemplate:createTemplate
-		};
-	};
-	
-	newTemplateFactory.$inject=['TEMPLATES_CONSTANTS','$q','$http'];
-	
-	angular.module('amoeba.templates').factory('newTemplateFactory',newTemplateFactory);
-	
-})();
-
-
-
-
-
-(function(){
-	
-	function templatesFactory(TEMPLATES_CONSTANTS,$q,$http){
-		
-		function fetchTemplates(){
-			var defered=$q.defer();
-			$http.get(TEMPLATES_CONSTANTS.FETCH_TEMPLATES_URL).success(function(response){
-				 defered.resolve(response);
-			}).error(function(error){
-				defered.reject(error);
-			});
-			return defered.promise;
-		};
-		
-		function deleteTemplate(templateId){
-			var defered=$q.defer();
-			$http.delete(TEMPLATES_CONSTANTS.DELETE_TEMPLATES_URL+templateId).success(function(response){
-				 defered.resolve(response);
-			}).error(function(error){
-				defered.reject(error);
-			});
-			return defered.promise;
-		};
-		
-		return{
-			fetchTemplates:fetchTemplates,
-			deleteTemplate:deleteTemplate
-		};
-	};
-	
-	templatesFactory.$inject=['TEMPLATES_CONSTANTS','$q','$http'];
-	
-	angular.module('amoeba.templates').factory('templatesFactory',templatesFactory);
-	
-})();
-
-
-
-
-
-(function() {
-
-	function templatesService() {
-		
-		this.template=null;
-	};
-
-	templatesService.$inject = [];
-
-	angular.module('amoeba.templates').service('templatesService', templatesService);
 
 })();
 
 (function(){
 	
-	angular.module('amoeba.myJobs').constant("MYJOBS_CONSTANTS",{
-		"FETCH_TEMPLATES_AND_HR_DETAILS_URL":"/amoeba/job/fetJobTemplate",
-		"POSTJOB_URL":"/amoeba/job",
-		"FETCH_JOBS_BY_STATUS_URL":"/amoeba/job/fetchJobs/",
-		"UPDATE_JOB_URL":"/amoeba/job",
-		"DELETE_JOB_URL":"/amoeba/job/",
-        "USERS_SUBMISSIONS_URL":"/amoeba/submissions/job/",
-        "SUBMISSION_FOR_USER_URL":"/amoeba/submissions/job/",
-        "UPDATE_SUBMISSION_URL":"/amoeba/submissions/updateStatus",
-        "RESUME_DOWNLOAD_URL":"/amoeba/submissions/filedownload?fileIs=",
-        "EDIT_AVAILABILITIES":"/amoeba/"
-       
-	});
-	
-})();
-
-(function(){
-	
-	function editAvailabilitiesController($scope,$loading,$uibModalInstance,viewSubmissionFactory,availabilityId,submmision){
+	function formController($rootScope,$scope,$state,formFactory,$cookies,$loading){
 		
-		$scope.errorMessage="";
-		var today=new Date();
+		$state.go("main.form");
+		$scope.rememberMe=false;
 		
-		$scope.dateOptions={
-				"first":{
-					minDate: today
-				},
-				"second":{
-					minDate: today
-				},
-				"third":{
-					minDate: today
-				}
-			  };
-		
-		 $scope.disabled = function(date, mode) {
-			    return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
-			  };
-		
-			  $scope.timeZones=["PST","CST","EST"];
-				$scope.startDate=["8:30 AM","9:00 AM","9:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM","12:00 PM","12:30 PM","01:00 PM","01:30 PM","02:00 PM","02:30 PM","03:00 PM","03:30 PM","04:00 PM","04:30 PM","05:00 PM","05:30 PM","06:00 PM","06:30 PM","07:00 PM"];
-				$scope.endDate=["9:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM","12:00 PM","12:30 PM","01:00 PM","01:30 PM","02:00 PM","02:30 PM","03:00 PM","03:30 PM","04:00 PM","04:30 PM","05:00 PM","05:30 PM","06:00 PM","06:30 PM","07:00 PM","07:30 PM","08:00 PM"];
-				
-			  
-		$scope.resume={
-				"interviewAvailability":[
-				                         {"fromTime":submmision.availablities[0].fromTime,
-				                          "toTime":submmision.availablities[0].toTime,
-				                          "timeZone":submmision.availablities[0].timeZone,
-				                          "date":new Date(submmision.availablities[0].date),
-				                          "invalid":false,
-				                          "id":submmision.availablities[0].id
-				                         },
-				                         {"fromTime":submmision.availablities[1].fromTime,
-					                          "toTime":submmision.availablities[1].toTime,
-					                          "timeZone":submmision.availablities[1].timeZone,
-					                          "date":new Date(submmision.availablities[1].date),
-					                          "invalid":false,
-					                          "id":submmision.availablities[1].id
-					                      },
-				                         {"fromTime":submmision.availablities[2].fromTime,
-					                          "toTime":submmision.availablities[2].toTime,
-					                          "timeZone":submmision.availablities[2].timeZone,
-					                          "date":new Date(submmision.availablities[2].date),
-					                          "invalid":false,
-					                          "id":submmision.availablities[2].id
-					                      }]
+		$scope.assignState=function(state){
+			$rootScope.activeState=state;
 		};
 		
-		$scope.availabilityId=angular.copy(availabilityId);
-		
-		$scope.endDate1=[$scope.endDate,
-		                 $scope.endDate,
-		                 $scope.endDate];
-			
-		 $scope.ok = function () {
-			    $uibModalInstance.close($scope.availabilityId,$scope.resume.interviewAvailability);
-			  };
-
-	     $scope.cancel = function () {
-			    $uibModalInstance.dismiss('cancel');
-	     };
-	     
-	     $scope.assignAvailabilityId=function(id){
-				var index=$scope.availabilityId.indexOf(id);
-				if(index===-1){
-					$scope.availabilityId.push(id);
-				}else{
-					$scope.availabilityId.splice(index,1);
-				}
-			};
-	     
-	     $scope.setEndTime=function(index){
-				$scope.resume.interviewAvailability[index].invalid=true;
-				if($scope.resume.interviewAvailability[index].fromTime!=="Start Time"){
-					$scope.resume.interviewAvailability[index].invalid=false;
-					$scope.endDate1[index]=angular.copy($scope.endDate).splice($scope.startDate.indexOf($scope.resume.interviewAvailability[index].fromTime));
-					$scope.resume.interviewAvailability[index].toTime=$scope.endDate1[index][0];
-				}
-			};
-	     
-	     $scope.saveAvailabilities=function(){
-	    	 $scope.errorMessage="";
-	    	 if($scope.availabilityId.length===0){
-	    		 $scope.errorMessage="Please select atleast one availability.";
-	    	 }else{
-		    	 $loading.start("editAvailabilities");
-		    	var tempSubmission= angular.copy(submmision);
-		    	tempSubmission.availabilityId=$scope.availabilityId;
-		    	tempSubmission.availablities=$scope.resume.interviewAvailability;
-		    	tempSubmission.dateChanged=true;
-		    	 viewSubmissionFactory.updateSubmission(tempSubmission).then(function(response){
-		    		 submmision.availabilityId=$scope.availabilityId;
-		    		 submmision.availablities=$scope.resume.interviewAvailability;
-				 $loading.finish("editAvailabilities");
-		    	 $uibModalInstance.close();
-				}).catch(function(){
-					$loading.finish("editAvailabilities");
-				});
-	    	 }
-	    	
-	     };
-			
-			
-	};
-	
-	editAvailabilitiesController.$inject=['$scope','$loading','$uibModalInstance','viewSubmissionFactory','availabilityId','submmision'];
-	
-	angular.module('amoeba.myJobs').controller("editAvailabilitiesController",editAvailabilitiesController);
-	
-})();
-
-(function(){
-	
-	function myJobsController($scope,myJobsFactory,$state,myJobsService,$loading){
-		
-		$scope.postJob=function(){
-			myJobsService.editJob=null;
-			$scope.$emit('sideBarViewEvent', ".postJob");
-			$state.go('main.postJob');
+		$scope.rememberMe1=function(){
+			$scope.rememberMe=!$scope.rememberMe;
 		};
 		
-		$scope.fetchMyJobs=function(status){
-			$loading.start("main");
-			myJobsFactory.fetchMyJobs(status).then(function(response){
-				$scope.myJobs=response;
-				$scope.status=status;
-				$loading.finish("main");
-			}).catch(function(){
-				$loading.finish("main");
-			});
-			$scope.status=status;
-		};
+		$scope.assignState('main.form');
 		
-		$scope.fetchMyJobs("active");
-
-		$scope.changeStatus=function(status,job,index){
-			$loading.start("main");
-			job.status=status;
-			myJobsFactory.changeStatusOfJob(job).then(function(){
-				$scope.myJobs.splice(index, 1);
-				$loading.finish("main");
-			}).catch(function(){
-				$loading.finish("main");
-			});
-		};
-		
-		$scope.deleteJob=function(job,index){
-			$loading.start("main");
-			myJobsFactory.deleteJob(job.id).then(function(){
-				$scope.myJobs.splice(index, 1);
-				$loading.finish("main");
-			}).catch(function(){
-				$loading.finish("main");
-			});
-		};
-		
-		$scope.editJob=function(job){
-			myJobsService.editJob=job;
-			$state.go('main.postJob');
-		};
-		
-		$scope.viewSubmissions=function(job){
-			myJobsService.viewSubmissionJob=job;
-			$state.go('main.viewSubmission');
-		};
-	};
-	
-	myJobsController.$inject=['$scope','myJobsFactory','$state','myJobsService','$loading'];
-	
-	angular.module('amoeba.myJobs').controller("myJobsController",myJobsController);
-	
-})();
-
-(function(){
-	
-	function postJobController($scope,postJobFactory,$state,myJobsService,$timeout,$loading){
-		$loading.start("main");
-		$scope.error="";
-		$scope.initializePostJob=function(){
-			$scope.postJob={
-					"templateId":$scope.templates.length===0?0:$scope.templates[0].templateId,
-					"hiringUserId":$scope.userDetails.role===2?($scope.userDetails.id).toString():"Select Hiring Manager",
+		$scope.resetFormDetails=function() {
+			$scope.formDetails = {
 					"title":"",
-					"location":"",
-					"jobType":1,
-					"startDate":new Date(),
-					"endDate":new Date(),
-					"description":"",
-					"skills":"",
-					"compensation":"",
-					"minimumExperience":"",
-					"maximumExperience":"",
-					"payrateType":"",
-					"currency":"",
-					"duration":"",
-					"status":"active",
-					"showCompensation":true,
-			};
-		};
-		
-		postJobFactory.fetchTemplatesAndHMDetails().then(function(response){
-			
-			$scope.dateOptions={
-					minDate: new Date()
-				};
-			
-				$scope.templates=response.templates;
-				$scope.HMDetails=response.hiringMgr;
-				if(myJobsService.editJob===null){
-					$scope.postOrUpdateLabel="PostJob To VideoResume";
-					$scope.initializePostJob();
-					if($scope.templates.length===0){
-						$scope.error="Please create template before posting a job.";
-					}
-				}else{
-					$scope.postOrUpdateLabel="UPDATE JOB";
-					$scope.postJob=myJobsService.editJob;
-					$scope.postJob.templateId=myJobsService.editJob.templateId;
-					$scope.postJob.startDate=new Date(myJobsService.editJob.startDate);
-					$scope.postJob.endDate=new Date(myJobsService.editJob.endDate);
-					$scope.postJob.duration=parseInt(myJobsService.editJob.duration);
-					$scope.postJob.compensation=parseInt($scope.postJob.compensation);
-					$scope.postJob.minimumExperience=parseInt($scope.postJob.minimumExperience);
-					$scope.postJob.maximumExperience=parseInt($scope.postJob.maximumExperience);
-					$scope.postJob.payrateType=($scope.postJob.payrateType);
-					$scope.postJob.currency=($scope.postJob.currency);
-					$scope.postJob.hiringUserId=($scope.postJob.hiringUserId).toString();
-				}
-				
-				$timeout(function() {
-					if (tinymce.editors.length > 0) {
-					    tinymce.execCommand('mceFocus', true, "CL" );       
-					    tinymce.execCommand('mceRemoveEditor',true, "CL");        
-					    tinymce.execCommand('mceAddEditor',true,"CL");
-					}else{
-						tinymce.init({
-						    selector: "#CL",
-							 plugins: [
-						        "advlist autolink lists link image charmap print preview anchor",
-						        "searchreplace visualblocks code fullscreen",
-						        "insertdatetime media table paste textcolor colorpicker"
-						    ],
-						    toolbar: "sizeselect | bold italic | fontselect | fontsizeselect | insertfile undo redo | styleselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image ",
-						    fontsize_formats: "8px 10px 12px 14px 18px 24px 36px",
-						    browser_spellcheck: true,
-						    contextmenu: false
-					   });
-						
-					}
-					if(myJobsService.editJob!==null){
-						$timeout(function() {
-							tinymce.get('CL').setContent(myJobsService.editJob.description);
-						},200);
-					}
+					"reportDescription" : "",
+					"age" : "",
+					"height" : "",
+					"status" : 0,
+					"spec_Id" :""  ,
+					"weight" :"",
+					"mainCat_Id" :"",
+					"subSpec_Id" :""
 					
-			    }, 200);
-				$loading.finish("main");
-			
-		}).catch(function(){
-			$loading.finish("main");
-		});
-		
-		
-		$scope.createJob=function(){
-			$scope.error="";
-			$loading.start("main");
-			$scope.postJob.description=tinymce.get('CL').getContent();
-			
-			if($scope.postJob.description!==''){
-				postJobFactory.createPost($scope.postJob).then(function(){
-					$scope.initializePostJob();
-					$loading.finish("main");
-					$state.go("main.myJobs");
-				}).catch(function(){
-					$loading.finish("main");
-				});
-			}else{
-				$scope.error="Please fill all the fields";
-				$loading.finish("main");
-			}
-			
-		};
-		
-		$scope.updateJob=function(){
-			$loading.start("main");
-			$scope.postJob.description=tinymce.get('CL').getContent();
-			if($scope.postJob.description!==''){
-			postJobFactory.updateJob($scope.postJob).then(function(){
-				$loading.finish("main");
-				$state.go("main.myJobs");
-			}).catch(function(){
-				$loading.finish("main");
-			});
-			}else{
-				$scope.error="Please fill all the fields";
-				$loading.finish("main");
-			}
-		};
-
-		$scope.autoComplete = function(){
-			var id = document.getElementById('location');
-		    var countryRestrict = {'country': 'us'};
-		    var optionsxx = {
-		      types: ['geocode'],
-		      componentRestrictions: countryRestrict
-		    };
-
-		    var autocomplete = new google.maps.places.Autocomplete(id, optionsxx);
-		    google.maps.event.addListener(autocomplete, 'place_changed', function () {
-		    	console.log("place::::::::::",autocomplete.getPlace().formatted_address);
-		    	$scope.postJob.location = autocomplete.getPlace().formatted_address;
-		    	console.log("Location::::::",$scope.postJob.location);
-		    });
-};
-		
-	};
-	
-	postJobController.$inject=['$scope','postJobFactory','$state','myJobsService','$timeout','$loading'];
-	
-	angular.module('amoeba.myJobs').controller("postJobController",postJobController);
-})();
-
-(function(){
-	
-	function viewSubmissionController($scope,viewSubmissionFactory,$state,myJobsService,$loading,$uibModal){
-		$loading.start("main");
-		$scope.status='NEW';
-		$scope.job= myJobsService.viewSubmissionJob;
-		$scope.activeUser=0;
-		$scope.activeSection=0;
-		$scope.sectionRating=[];
-		$scope.statusToMove="";
-		$scope.availabilityId=[];
-		$scope.interviewMode="INPERSON";
-		
-		$scope.initializeStatusCount=function(){
-			$scope.statuses={
-					"NEW":0,
-					"SUBMITTED_HM":0,
-					"PARK":0,
-					"INTERVIEW_SCHEDULED":0,
-					"HIRED":0,
-					"REJECTED":0
-				};
-		};
-		
-		$scope.initializeStatusCount();
-			
-		$scope.statusCount=function(statusCounts){
-			angular.forEach(statusCounts,function(statusObj){
-				$scope.statuses[statusObj.status]=$scope.statuses[statusObj.status]+statusObj.count;
-			});
-		};
-		
-			$scope.fetchUsersSubmissionsForStatus=function(){
-				$loading.start("main");
-				viewSubmissionFactory.fetchUsersSubmissions($scope.job.id,$scope.status).then(function(response){
-					$scope.viewSubmission=response;
-					if($scope.viewSubmission.submmision !== null){
-					 var myVideo = document.getElementsByTagName('video')[0];
-					 myVideo.src = $scope.viewSubmission.submmision.sections[$scope.activeSection].videoPath;
-                    $scope.statusToMove="";
-                    $scope.availabilityId=[];
-					if($scope.status==="INTERVIEW_SCHEDULED"){
-						$scope.availabilityId=$scope.viewSubmission.submmision.availabilityId;
-						$scope.interviewMode=$scope.viewSubmission.submmision.interviewMode;
-					}
-				}
-					$scope.initializeStatusCount();
-					$scope.statusCount($scope.viewSubmission.statusCounts);
-					$loading.finish("main");
-				}).catch(function(){
-					$loading.finish("main");
-				});
-			};
-			
-			$scope.fetchUsersSubmissionsForStatus();
-		
-			$scope.changeSection=function(index){
-				$loading.start("main");
-				$scope.error="";
-				$scope.activeSection=index;
-				 var myVideo = document.getElementsByTagName('video')[0];
-				 myVideo.src = $scope.viewSubmission.submmision.sections[$scope.activeSection].videoPath;
-				$loading.finish("main");
-			};
-			
-			$scope.fetchSubmissions=function(status){
-				$scope.error="";
-				$scope.status=status;
-				$scope.fetchUsersSubmissionsForStatus();
-			};
-			
-			$scope.getSubmissionsForUser=function(user,index){
-				$loading.start("main");
-				viewSubmissionFactory.getSubmissionsForUser($scope.job.id,user.userId,$scope.status).then(function(response){
-					$scope.viewSubmission.submmision=response;
-				 var myVideo = document.getElementsByTagName('video')[0];
-				 myVideo.src = $scope.viewSubmission.submmision.sections[$scope.activeSection].videoPath;
-				$scope.sectionRating=[];
-				$scope.activeUser=index;
-					$loading.finish("main");
-				}).catch(function(){
-					$loading.finish("main");
-				});
-			};
-			
-			$scope.toStatus=function(status){
-				$scope.statusToMove= status;
-				
-				if($scope.statusToMove!=="INTERVIEW_SCHEDULED" && $scope.status!=="INTERVIEW_SCHEDULED"){
-					$scope.interviewMode="INPERSON";
-					$scope.availabilityId=[];
-					$scope.processError="";
-				}
-				
-				if(status!=='REJECTED'){
-					$scope.rejectFlag=false;
-				}else{
-					$scope.rejectFlag=!$scope.rejectFlag;
-				}
-				};
-			
-			$scope.checkRatingValues=function(){
-				if( $scope.sectionRating.length!==$scope.viewSubmission.submmision.sections.length){
-					return true;
-				}else{
-					return false;
-				}
-			};
-			
-			$scope.checkStatusToMove=function(){
-				if($scope.statusToMove===""){
-					return true;
-				}
-				return false;
-			};
-			
-			$scope.buildSubmissionObj=function(){
-				var updatedSubmission=angular.copy($scope.viewSubmission.submmision);
-				angular.forEach($scope.sectionRating,function(rating,index){
-					if($scope.userDetails.role===2){
-						updatedSubmission.sections[index].hmRating=rating;
-					}else {
-						updatedSubmission.sections[index].cmRating=rating;
-					}
-				});
-				updatedSubmission.status=$scope.statusToMove;
-				
-				if(updatedSubmission.comments!==null){
-					angular.forEach(updatedSubmission.comments,function(comment){
-						if(comment.userId===$scope.userDetails.id){
-							comment.comment=$scope.rejectionText;
-						}
-					});
-				}else if($scope.statusToMove==="REJECTED"){
-					updatedSubmission.comments=[{
-						"submissionId":updatedSubmission.id,
-						"comment":$scope.rejectionText,
-						"userId":$scope.userDetails.id
-					}];
-				}else if($scope.statusToMove==="INTERVIEW_SCHEDULED"){
-					updatedSubmission.availabilityId=$scope.availabilityId;
-					updatedSubmission.interviewMode=$scope.interviewMode;
-					updatedSubmission.dateChanged=false;
-				}
-				viewSubmissionFactory.updateSubmission(updatedSubmission).then(function(response){
-					$scope.statusToMove="";
-					$scope.rejectFlag=false;
-					$scope.fetchUsersSubmissionsForStatus();
-				}).catch(function(error){
-					$loading.finish("main");
-				});
-				
-			};
-			
-			$scope.submitRating=function(){
-				$loading.start("main");
-				$scope.error="";
-				$scope.processError="";
-				if($scope.checkRatingValues() && $scope.status==='NEW'){
-					$scope.error="Please provide rating for all the sections";
-					$loading.finish("main");
-				}else if($scope.checkStatusToMove()){
-					$scope.error="Please select the status to move ";
-					$loading.finish("main");
-				}else if($scope.statusToMove==="REJECTED" && $scope.rejectionText===undefined){
-					$scope.error="Please provide reason for rejection";
-					$loading.finish("main");
-				}else if($scope.statusToMove==="INTERVIEW_SCHEDULED" && ($scope.interviewMode==="" || $scope.availabilityId===[])){
-					$scope.processError="Please select Availability and mode of interview";
-					$loading.finish("main");
-				}else{
-					$scope.buildSubmissionObj();
-				}
-			};
-			
-			$scope.fileDownload=function(){
-				//$loading.start("main");
-				viewSubmissionFactory.fileDownload($scope.viewSubmission.submmision).then(function(response){
-					//$loading.finish("main");
-				}).catch(function(){
-					//$loading.finish("main");
-				});
-			};
-			
-			$scope.assignAvailabilityId=function(id){
-				var index=$scope.availabilityId.indexOf(id);
-				if(index===-1){
-					$scope.availabilityId.push(id);
-				}else{
-					$scope.availabilityId.splice(index,1);
-				}
-			};
-			
-			$scope.editAvailabilities=function(){
-				var modalInstance = $uibModal.open({
-					  animate:true,
-					  backdrop: 'static',
-					  keyboard:false,
-				      templateUrl: 'partials/editAvailabilities.html',
-				      size: 'lg',
-				      controller:'editAvailabilitiesController',
-				      resolve:{
-				    	  submmision:function(){
-				    		  return $scope.viewSubmission.submmision;
-				          },
-				          availabilityId:function(){
-				    		  return $scope.availabilityId;
-				          }
-				      }
-				    });
-
-				 modalInstance.result.then(function(){
-					 //ok
-					 $scope.availabilityId=$scope.viewSubmission.submmision.availabilityId;
-					 $scope.statusToMove="";
-				   }, function () {
-				     // cancel
-				    });
-			};
-			
-			$scope.assignInterviewMode=function(mode){
-				$scope.interviewMode=mode;
-			};
-			
-	};
-	
-	viewSubmissionController.$inject=['$scope','viewSubmissionFactory','$state','myJobsService','$loading','$uibModal'];
-	
-	angular.module('amoeba.myJobs').controller("viewSubmissionController",viewSubmissionController);
-	
-})();
-
-(function(){
-	
-	function myJobsFactory($http,MYJOBS_CONSTANTS,$q){
-		
-		function fetchMyJobs(status){
-			var defered=$q.defer();
-			$http.get(MYJOBS_CONSTANTS.FETCH_JOBS_BY_STATUS_URL+status).success(function(response) {
-				defered.resolve(response);
-			}).error(function(error) {
-				defered.reject(error);
-			});
-			return defered.promise;
-		};
-		
-		function changeStatusOfJob(job){
-			var defered=$q.defer();
-			$http.put(MYJOBS_CONSTANTS.UPDATE_JOB_URL,job).success(function(response) {
-				defered.resolve(response);
-			}).error(function(error) {
-				defered.reject(error);
-			});
-			return defered.promise;
-		};
-		
-		function deleteJob(jobId){
-			var defered=$q.defer();
-			$http.delete(MYJOBS_CONSTANTS.DELETE_JOB_URL+jobId).success(function(response) {
-				defered.resolve(response);
-			}).error(function(error) {
-				defered.reject(error);
-			});
-			return defered.promise;
-		};
-		
-		return {
-		fetchMyJobs:fetchMyJobs,
-		changeStatusOfJob:changeStatusOfJob,
-		deleteJob:deleteJob
-		};
-	};
-	
-	myJobsFactory.$inject=['$http','MYJOBS_CONSTANTS','$q'];
-	
-	angular.module('amoeba.myJobs').factory('myJobsFactory',myJobsFactory);
-	
-})();
-
-
-
-
-
-(function(){
-	
-	function postJobFactory($http,MYJOBS_CONSTANTS,$q){
-		
-		function fetchTemplatesAndHMDetails(){
-			var defered=$q.defer();
-			$http.get(MYJOBS_CONSTANTS.FETCH_TEMPLATES_AND_HR_DETAILS_URL).success(function(response){
-				defered.resolve(response);
-			}).error(function(error){
-				defered.reject(error);
-			});
-			return defered.promise;
-		}
-		
-		function createPost(postJob){
-			var defered=$q.defer();
-			$http.post(MYJOBS_CONSTANTS.POSTJOB_URL,postJob).success(function(response){
-				defered.resolve(response);
-			}).error(function(error){
-				defered.reject(error);
-			});
-			return defered.promise;
-		}
-		
-		function updateJob(job){
-			var defered=$q.defer();
-			$http.put(MYJOBS_CONSTANTS.UPDATE_JOB_URL,job).success(function(response) {
-				defered.resolve(response);
-			}).error(function(error) {
-				defered.reject(error);
-			});
-			return defered.promise;
-		};
-		
-		return {
-		 fetchTemplatesAndHMDetails:fetchTemplatesAndHMDetails,
-		 createPost:createPost,
-		 updateJob:updateJob
-		};
-	};
-	
-	postJobFactory.$inject=['$http','MYJOBS_CONSTANTS','$q'];
-	
-	angular.module('amoeba.myJobs').factory('postJobFactory',postJobFactory);
-	
-})();
-
-
-
-
-
-(function(){
-	
-	function viewSubmissionFactory($http,MYJOBS_CONSTANTS,$q){
-		
-		function fetchUsersSubmissions(jobId,status){
-			var defered=$q.defer();
-			$http.get(MYJOBS_CONSTANTS.USERS_SUBMISSIONS_URL+jobId+"?status="+status).success(function(response) {
-				defered.resolve(response);
-			}).error(function(error) {
-				defered.reject(error);
-			});
-			return defered.promise;
-		};
-		
-		function getSubmissionsForUser(jobId,userId,status){
-			var defered=$q.defer();
-			$http.get(MYJOBS_CONSTANTS.SUBMISSION_FOR_USER_URL+jobId+"/user/"+userId+"?status="+status).success(function(response) {
-				defered.resolve(response);
-			}).error(function(error) {
-				defered.reject(error);
-			});
-			return defered.promise;
-		};
-		
-		function updateSubmission(submission){
-			var defered=$q.defer();
-			$http.put(MYJOBS_CONSTANTS.UPDATE_SUBMISSION_URL,submission).success(function(response) {
-				defered.resolve(response);
-			}).error(function(error) {
-				defered.reject(error);
-			});
-			return defered.promise;
-		};
-		
-		function fileDownload(submission){
-			var defered=$q.defer();
-			$http.get(MYJOBS_CONSTANTS.RESUME_DOWNLOAD_URL+submission.userId+'\\'+submission.resumePath).success(function(response) {
-				defered.resolve(response);
-			}).error(function(error) {
-				defered.reject(error);
-			});
-			return defered.promise;
-		};
-		
-		function updateAvailabilities(availabilities){
-			var defered=$q.defer();
-			$http.put(MYJOBS_CONSTANTS.EDIT_AVAILABILITIES,availabilities).success(function(response) {
-				defered.resolve(response);
-			}).error(function(error) {
-				defered.reject(error);
-			});
-			return defered.promise;
-		};
-		
-		
-		return {
-			fetchUsersSubmissions:fetchUsersSubmissions,
-			getSubmissionsForUser:getSubmissionsForUser,
-			updateSubmission:updateSubmission,
-			fileDownload:fileDownload,
-			updateAvailabilities:updateAvailabilities
-		};
-	};
-	
-	viewSubmissionFactory.$inject=['$http','MYJOBS_CONSTANTS','$q'];
-	
-	angular.module('amoeba.myJobs').factory('viewSubmissionFactory',viewSubmissionFactory);
-	
-})();
-
-
-
-
-
-
-(function(){
-	
-	function myJobsService(){
-	
-		this.editJob=null;
-		this.viewSubmissionJob=null;
-	};
-	
-	myJobsService.$inject=[];
-	
-	angular.module('amoeba.myJobs').service('myJobsService',myJobsService);
-	
-})();
-
-
-
-
-
-(function(){
-	
-	angular.module('amoeba.users').constant("USERS_CONSTANTS",{
-		"FETCH_ALL_USERS_URL":"/amoeba/fetchAllUsers",
-		"ACTIVATE_USER_URL":"/amoeba/activateUser?username=",
-		"DEACTIVATE_USER_URL":"/amoeba/deactivateUser?username="
-	});
-	
-})();
-
-(function(){
-	
-	function newUserController($scope,loginFactory,loginService,$loading){
-		
-		$scope.roles=loginService.getRoles();
-		
-		$scope.resetUserDetails=function() {
-			$scope.userDetails = {
-				"emailId" : "",
-				"password" : "",
-				"role" : 0
 			};
 		};
 		
 		$scope.resetMessages=function() {
-			$scope.loginMessageDetails = {
+			
+			$scope.formSubmitMessageDetails = {
 				"errorMessage" : {
-					"signup_emailId" : ""
+					"submit" : ""
 				},
 				"successMessage" : {
-					"signup_emailId" : ""
+					"submit" : ""
 				}
 			};
 		};
-		 
-		$scope.resetUserDetails();
+		
+		
+		$scope.resetFormDetails();
 		$scope.resetMessages();
 		
-		$scope.checkEmailAvailable=function(){
-			if($scope.userDetails.emailId!==''){
-				$scope.loginMessageDetails.errorMessage.signup_emailId="";
-				loginFactory.checkEmailAvailable($scope.userDetails.emailId).then(function(response){
-					if(response[0]==='alreadyExist'){
-						$scope.loginMessageDetails.errorMessage.signup_emailId="Email already exist.";
-					}else{
-						$scope.resetMessages();
-					}
+		$scope.formSubmit=function(){
+			$loading.start('main');
+				formFactory.formSubmit($scope.formDetails).then(function(response){
+					$scope.formSubmitMessageDetails.successMessage.submit=response.success;
+					$scope.resetFormDetails();
+					$loading.finish('main');
 				}).catch(function(error){
+					$scope.formSubmitMessageDetails.errorMessage.submit="Something went wrong please contact administrator";
+					$loading.finish('main');
 	            });
-			}
-		};
-		
-		$scope.signup=function(){
-			$loading.start("main");
-				$scope.resetMessages();
-				loginFactory.signup($scope.userDetails).then(function(response){
-					$scope.loginMessageDetails.successMessage.signup_emailId="New User Created";
-					$scope.resetUserDetails();
-					$loading.finish("main");
-				}).catch(function(error){
-					$scope.loginMessageDetails.errorMessage.signup_emailId="Something went wrong  please contact administrator";
-					$loading.finish("main");
-				});
-		};
-	};
-	
-	newUserController.$inject=['$scope','loginFactory','loginService','$loading'];
-	
-	angular.module('amoeba.login').controller("newUserController",newUserController);
-	
-})();
-
-(function(){
-	
-	function usersController($scope,usersFactory,$loading){
-		$scope.fetchAllUsers=function(){
-	    	$loading.start("main");
-	    	usersFactory.fetchAllUsers().then(function(response){
-				$scope.allUsers=response;
-				$loading.finish("main");
-			}).catch(function(){
-				$loading.finish("main");
-            });
-		};
-		$scope.fetchAllUsers();
 			
-	    $scope.activateUser=function(user,index){
-	    	$loading.start("main");
-			usersFactory.activateUser(user.email).then(function(response){
-				$scope.allUsers[index].verification=true;
-				$scope.fetchAllUsers();
-				}).catch(function(){
-					$loading.finish("main");
-	            });
 		};
-		
-		$scope.deActivateUser=function(user,index){
-			$loading.start("main");
-			usersFactory.deActivateUser(user.email).then(function(response){
-				$scope.allUsers[index].verification=false;
-				$scope.fetchAllUsers();
-				}).catch(function(){
-					$loading.finish("main");
-	            });
-		};
-		
 	};
+	 
+	formController.$inject=['$rootScope','$scope','$state','formFactory','$cookies','$loading'];
 	
-	usersController.$inject=['$scope','usersFactory','$loading'];
-	
-	angular.module('amoeba.users').controller("usersController",usersController);
+	angular.module('amoeba.form').controller("formController",formController);
 	
 })();
 
 (function(){
 	
-	function usersFactory($q,USERS_CONSTANTS,$http){
+	function formFactory($q,$http,FORM_CONSTANTS){
 		
-		function fetchAllUsers(){
+		function formSubmit(formDetails){
 			var defered=$q.defer();
-			 $http.get(USERS_CONSTANTS.FETCH_ALL_USERS_URL).success(function(response){
-				 defered.resolve(response);
-			 }).error(function(){
-				 defered.reject("error");
-			 });
-			return defered.promise;
-		};
-		
-		function activateUser(email){
-			var defered=$q.defer();
-			 $http.post(USERS_CONSTANTS.ACTIVATE_USER_URL+email).success(function(response){
-				 defered.resolve(response);
-			 }).error(function(){
-				 defered.reject("error");
-			 });
-			return defered.promise;
-		};
-		
-		function deActivateUser(email){
-			var defered=$q.defer();
-			 $http.post(USERS_CONSTANTS.DEACTIVATE_USER_URL+email).success(function(response){
-				 defered.resolve(response);
-			 }).error(function(){
-				 defered.reject("error");
-			 });
+			var body =  {"title" : formDetails.title,"reportDescription" : formDetails.reportDescription,"age": formDetails.age,"height":formDetails.height,"status":formDetails.status,"spec_Id":formDetails.spec_Id,"weight":formDetails.weight,"mainCat_Id":formDetails.mainCat_Id,"subSpec_Id":formDetails.subSpec_Id};
+			$http.post(FORM_CONSTANTS.SUBMIT_FORM_URL,body).success(function(response) {
+				defered.resolve(response);
+			}).error(function(error) {
+				defered.reject(error);
+			});
 			return defered.promise;
 		};
 		
 		return {
-			fetchAllUsers:fetchAllUsers,
-			activateUser:activateUser,
-			deActivateUser:deActivateUser
+			formSubmit:formSubmit
 		};
 	};
 	
-	usersFactory.$inject=['$q','USERS_CONSTANTS','$http'];
+	formFactory.$inject=['$q','$http','FORM_CONSTANTS'];
 	
-	angular.module('amoeba.users').factory('usersFactory',usersFactory);
-	
-})();
-
-
-
-
-
-(function(){
-	
-	angular.module('amoeba.openings').constant("MYSUBMISSIONS_CONSTANTS",{
-		"FETCH_MYSUBMISSIONS_URL":"/amoeba/submissions/user/",
-		 "FETCH_JOB_DETAILS_URL":"/amoeba/job/",
-		 "FETCH_MY_SUBMISSION_URL":"/amoeba/submissions/job/"
-	});
+	angular.module('amoeba.form').factory('formFactory',formFactory);
 	
 })();
-
 (function(){
 	
-	angular.module('amoeba.openings').constant("OPENINGS_CONSTANTS",{
-		"OPENINGS_URL":"/amoeba/job",
-		"FETCH_SECTIONS_URL":"/amoeba/templates/",
-		"APPLY_JOB_URL":"/amoeba/submissions",
-		"INSERT_SECTIONS_URL":"/amoeba/submissions/sections",
-		"GET_APPLY_FLAG":"/amoeba/job/"
-	});
-	
-})();
-
-(function(){
-	
-	function applyJobController($scope,$state,openingsFactory,openingsService,$loading){
-		var today=new Date();
-		$scope.error="";
-		$scope.dateOptions={
-				"first":{
-					minDate: today
-				},
-				"second":{
-					minDate:today
-				},
-				"third":{
-					minDate: today
-				}
-			  };
+	function myFormController($scope,myFormFactory,$state,$loading){
 		
-		 $scope.disabled = function(date, mode) {
-			    return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
-			  };
+		/*$scope.postJob=function(){
+			myJobsService.editJob=null;
+			$scope.$emit('sideBarViewEvent', ".submitedForms");
+			$state.go('main.submitedForms');
+		};
+		*/
+		$loading.start('main');
+			formFactory.getForms().then(function(response) {
+				/*if(response.form === undefined){
+					$scope.formMessageDetails.errorMessage.submit="you didn't submited any Query ";
+				}*/
+				$scope.formDetails=response;
+				console.log(response);
+				$loading.finish("main");
+			}).catch(function(){
+				$loading.finish("main");
+			});
+			
+		};
 		
-			  $scope.timeZones=["PST","CST","EST"];
-				$scope.startDate=["8:30 AM","9:00 AM","9:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM","12:00 PM","12:30 PM","01:00 PM","01:30 PM","02:00 PM","02:30 PM","03:00 PM","03:30 PM","04:00 PM","04:30 PM","05:00 PM","05:30 PM","06:00 PM","06:30 PM","07:00 PM"];
-				$scope.endDate=["9:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM","12:00 PM","12:30 PM","01:00 PM","01:30 PM","02:00 PM","02:30 PM","03:00 PM","03:30 PM","04:00 PM","04:30 PM","05:00 PM","05:30 PM","06:00 PM","06:30 PM","07:00 PM","07:30 PM","08:00 PM"];
+		
+	
+	
+	myFormController.$inject=['$scope','myFormFactory','$state','$loading'];
+	
+	angular.module('amoeba.form').controller("myFormController",myFormController);
+	
+})();
+(function(){
+	
+	function myFormFactory($http,FORM_CONSTANTS,$q){
+		
+		
+
+		function getForm(){
+			var defered=$q.defer();
+			$http.get(FORM_CONSTANTS.GET_FORMS).success(function(response){
+				defered.resolve(response);
 				
-			  
-		$scope.resume={
-				"sections":[],
-				"interviewAvailability":[
-				                         {"from":$scope.startDate[0],
-				                          "to":$scope.endDate[0],
-				                          "timeZone":$scope.timeZones[0],
-				                          "invalid":false
-				                         },
-				                         {"from":$scope.startDate[0],
-					                          "to":$scope.endDate[0],
-					                          "timeZone":$scope.timeZones[0],
-					                          "invalid":false
-					                      },
-				                         {"from":$scope.startDate[0],
-					                          "to":$scope.endDate[0],
-					                          "timeZone":$scope.timeZones[0],
-					                          "invalid":false
-					                      }],
-				"attachment":"",
-				"attachmentName":"",
-				"notes":""
-		};
-		
-		$scope.endDate1=[$scope.endDate,
-		                 $scope.endDate,
-		                 $scope.endDate];
-		
-		$scope.toInt=function(stringDuration){
-			var intDurations=[];
-			angular.forEach(stringDuration,function(duration){
-				intDurations.push(parseInt(duration));
-			});
-			return intDurations;
-		};
-		
-		$scope.defaultDurations=function(){
-			var durations=[];
-			angular.forEach($scope.sections.split(','),function(section){
-				durations.push(120);
-			});
-			return durations;
-		};
-		
-		$scope.opening=openingsService.opening;
-		openingsFactory.getSections($scope.opening.templateId).then(function(response){
-			$scope.sections=response.sections;
-			$scope.durations=response.durations!==null?$scope.toInt(response.durations.split(',')):$scope.defaultDurations();
-		}).catch(function(){
-			
-		});
-		
-		$scope.assignSectionName=function(section,index){
-			if($scope.resume.sections[index]===undefined){
-				$scope.resume.sections[index]={};
-			}
-			$scope.resume.sections[index].sectionName=section;
-		};
-		
-		$scope.validateFileFormats=function(){
-			var i=0;
-			angular.forEach($scope.resume.sections,function(section,index){
-				$scope.resume.sections[index].videoFileInvalidDuration="";
-				if(section.videoFile.type.indexOf("mp4")>0 || section.videoFile.type.indexOf("webm")>0 || section.videoFile.type.indexOf("ogg")>0 || section.videoFile.type.indexOf("ogv")>0){
-					$scope.resume.sections[index].videoFileInvalidFormat="";
-					i++;
-				}else{
-					$scope.resume.sections[index].videoFileInvalidFormat="Invalid file format";
-				}
-			});
-			return i!==$scope.resume.sections.length;
-		};
-		
-		$scope.validateFileDuration=function(){
-			var i=0;
-			angular.forEach($scope.resume.sections,function(section,index){
-				var fileDuration=$scope.durations[index];
-				if(section.videoFile.duration<fileDuration){
-					section.videoFileInvalidDuration="";
-					i++;
-				}else{
-					section.videoFileInvalidDuration="Duration of the video cannot be more than "+fileDuration+" secs";
-				}
-			});
-			return i!==$scope.resume.sections.length;
-		};
-		
-		$scope.validateAttachmentFormat=function(){
-			var i=0;
-		if(($scope.resume.attachment.name.substring($scope.resume.attachment.name.lastIndexOf(".")+1)==="doc") || ($scope.resume.attachment.name.substring($scope.resume.attachment.name.lastIndexOf(".")+1)==="docx") ){
-			$scope.resume.attachmentInvalidFormat="";
-			i++;
-		}else{
-			$scope.resume.attachmentInvalidFormat="Invalid file format";
-		}
-			return i!==1;
-		};
-		
-		$scope.validateJobData=function(){
-			var invalidFlieSize=false;
-			angular.forEach($scope.resume.sections,function(section,index){
-				$scope.resume.sections[index].videoFileInvalidDuration="";
-				if((section.videoFile.size/1024000)>10 ){
-					$scope.resume.sections[index].videoFileInvalidSize="File size exceeded";
-					invalidFlieSize= true;
-				}else{
-					$scope.resume.sections[index].videoFileInvalidSize=" ";
-				}
-			});
-			
-			if(($scope.resume.attachment.size/1024000)>1){
-				$scope.resume.attachmentInvalidSize="File size exceeded";
-				invalidFlieSize= true;
-			}
-			return invalidFlieSize;
-		};
-		
-		$scope.validateSelfRatingData=function(){
-			var invalidSelfRatingData=false;
-			angular.forEach($scope.resume.sections,function(section){
-				if(section.userRating===undefined || section.userRating===0){
-					invalidSelfRatingData= true;
-				}
-			});
-			
-			return invalidSelfRatingData;
-		};
-		
-		
-		$scope.applyJob=function(){
-			$loading.start("main");
-			if($scope.validateFileFormats() ||  $scope.validateAttachmentFormat() || $scope.validateJobData() || $scope.validateFileDuration()){
-				$loading.finish("main");
-			}else if($scope.validateSelfRatingData()){
-				$scope.error="Please provide self rating for all sections";
-				$loading.finish("main");
-			}else{
-				openingsFactory.applyJob($scope.resume,$scope.opening).then(function(response){
-					$loading.finish("main");
-					$state.go('main.openings');
-							}).catch(function(){
-								$loading.finish("main");
-							});
-			}
-		};
-		
-		$scope.setEndTime=function(index){
-			$scope.resume.interviewAvailability[index].invalid=true;
-			if($scope.resume.interviewAvailability[index].from!=="Start Time"){
-				$scope.resume.interviewAvailability[index].invalid=false;
-				$scope.endDate1[index]=angular.copy($scope.endDate).splice($scope.startDate.indexOf($scope.resume.interviewAvailability[index].from));
-				$scope.resume.interviewAvailability[index].to=$scope.endDate1[index][0];
-			}
-			
-		};
-		
-		$scope.checkInvalidEndTime=function(index){
-			if($scope.resume.interviewAvailability[index].to==="End Time"){
-				$scope.resume.interviewAvailability[index].invalid=true;
-			}
-		};
-		
-	};
-	
-	applyJobController.$inject=['$scope','$state','openingsFactory','openingsService','$loading'];
-	
-	angular.module('amoeba.openings').controller("applyJobController",applyJobController);
-	
-})();
-
-(function(){
-	
-	function mySubmissionsController($rootScope,$scope,$state,mySubmissionsFactory,$loading,mySubmissionsService){
-		$loading.start("main");
-		mySubmissionsFactory.fetchMySubmissions($scope.userDetails.id).then(function(response){
-			$scope.mySubmissions=response;
-				$loading.finish("main");
-			}).catch(function(){
-				$loading.finish("main");
-			});
-		
-		$scope.getJobDetails=function(jobId,index){
-			
-			if(	$scope.mySubmissions[index].jobDetails===undefined){
-				mySubmissionsFactory.getJobDetails(jobId).then(function(response){
-					$scope.mySubmissions[index].jobDetails={};
-					$scope.mySubmissions[index].jobDetails=response;
-					$scope.mySubmissions[index].showDescription=true;
-					$loading.finish("main");
-				}).catch(function(){
-					$loading.finish("main");
-				});
-			}else{
-				$scope.mySubmissions[index].showDescription=!$scope.mySubmissions[index].showDescription;
-			}
-		};
-		
-        $scope.showResume=function(jobId,jobTitle){
-        	mySubmissionsService.jobId=jobId;
-        	mySubmissionsService.jobTitle=jobTitle;
-        	$state.go("main.viewResume");
-		};
-		
-	};
-	
-	mySubmissionsController.$inject=['$rootScope','$scope','$state','mySubmissionsFactory','$loading','mySubmissionsService'];
-	
-	angular.module('amoeba.openings').controller("mySubmissionsController",mySubmissionsController);
-	
-})();
-
-(function(){
-	
-	function openingsController($rootScope,$scope,$state,openingsFactory,openingsService,$loading){
-		$loading.start("main");
-		openingsFactory.fetchOpenings().then(function(response){
-				$scope.openings=response;
-				$loading.finish("main");
-			}).catch(function(){
-				$loading.finish("main");
-			});
-		
-		$scope.applyJob=function(opening){
-			openingsService.opening=opening;
-			$state.go("main.applyJob");
-		};
-		
-		$scope.getApplyFlag=function(opening){
-			
-			if(!opening.openDescription){
-				$loading.start("main");
-				openingsFactory.getApplyFlag(opening.id,$scope.userDetails.id).then(function(response){
-					opening.applied=response;
-					opening.openDescription=true;
-					$loading.finish("main");
-				}).catch(function(){
-					$loading.finish("main");
-				});
-			}else{
-				opening.openDescription=false;
-			}
-		};
-	};
-	
-	openingsController.$inject=['$rootScope','$scope','$state','openingsFactory','openingsService','$loading'];
-	
-	angular.module('amoeba.openings').controller("openingsController",openingsController);
-	
-})();
-
-(function(){
-	
-	function viewResumeController($rootScope,$scope,$state,mySubmissionsFactory,$loading,mySubmissionsService){
-		$loading.start("main");
-		
-		$scope.activeSection=0;
-		$scope.title=mySubmissionsService.jobTitle;
-		mySubmissionsFactory.getMySubmission(mySubmissionsService.jobId,$scope.userDetails.id).then(function(response){
-			$scope.mySubmission=response;
-			 var myVideo = document.getElementsByTagName('video')[0];
-			 myVideo.src = $scope.mySubmission.sections[$scope.activeSection].videoPath;
-				$loading.finish("main");
-			}).catch(function(){
-				$loading.finish("main");
-			});
-		
-		$scope.changeSection=function(index){
-			$loading.start("main");
-			$scope.error="";
-			$scope.activeSection=index;
-			 var myVideo = document.getElementsByTagName('video')[0];
-			 myVideo.src = $scope.mySubmission.sections[$scope.activeSection].videoPath;
-			$loading.finish("main");
-		};
-	
-		
-	};
-	
-	viewResumeController.$inject=['$rootScope','$scope','$state','mySubmissionsFactory','$loading','mySubmissionsService'];
-	
-	angular.module('amoeba.openings').controller("viewResumeController",viewResumeController);
-	
-})();
-
-(function(){
-	angular.module('amoeba.openings').directive('fileModel', ['$parse', function ($parse) {
-        return {
-           restrict: 'A',
-           link: function(scope, element, attrs) {
-              var model = $parse(attrs.fileModel);
-              var modelSetter = model.assign;
-              
-              element.bind('change', function(){
-            	  var file= element[0].files[0];
-                 scope.$apply(function(){
-                	 if(file.type.indexOf("mp4")>0 || file.type.indexOf("webm")>0 || file.type.indexOf("ogg")>0 || file.type.indexOf("ogv")>0){
-                		 window.URL = window.URL || window.webkitURL;
-                		  var video = document.createElement('video');
-                		  video.preload = 'metadata';
-                		  video.onloadedmetadata = function() {
-                		    window.URL.revokeObjectURL(this.src);
-                		   file.duration=video.duration;
-                		  modelSetter(scope, file);
-                		  };
-                		  video.src = URL.createObjectURL(file);
-                	 }else{
-                		 modelSetter(scope, file);
-                	 }
-                 });
-              });
-           }
-        };
-     }]);
-})();
-
-(function(){
-	
-	function mySubmissionsFactory($http,MYSUBMISSIONS_CONSTANTS,$state,$q){
-		
-		function fetchMySubmissions(id){
-			var defered=$q.defer();
-			$http.get(MYSUBMISSIONS_CONSTANTS.FETCH_MYSUBMISSIONS_URL+id).success(function(response){
-				defered.resolve(response);
 			}).error(function(error){
 				defered.reject(error);
 			});
 			return defered.promise;
-		}
-		
-		function getJobDetails(jobId){
-			var defered=$q.defer();
-			$http.get(MYSUBMISSIONS_CONSTANTS.FETCH_JOB_DETAILS_URL+jobId).success(function(response){
-				defered.resolve(response);
-			}).error(function(error){
-				defered.reject(error);
-			});
-			return defered.promise;
-		}
-		
-		function getMySubmission(jobId,userId){
-			var defered=$q.defer();
-			$http.get(MYSUBMISSIONS_CONSTANTS.FETCH_MY_SUBMISSION_URL+jobId+"/user/"+userId).success(function(response){
-				defered.resolve(response);
-			}).error(function(error){
-				defered.reject(error);
-			});
-			return defered.promise;
-		}
+		};
 		
 		
 		return {
-			fetchMySubmissions:fetchMySubmissions,
-			getJobDetails:getJobDetails,
-			getMySubmission:getMySubmission
+			getForm:getForm
 		};
 	};
 	
-	mySubmissionsFactory.$inject=['$http','MYSUBMISSIONS_CONSTANTS','$state','$q'];
+	myFormFactory.$inject=['$http','FORM_CONSTANTS','$q'];
 	
-	angular.module('amoeba.openings').factory('mySubmissionsFactory',mySubmissionsFactory);
-	
-})();
-
-
-
-
-
-(function(){
-	
-	function openingsFactory($http,OPENINGS_CONSTANTS,$state,$q){
-		
-		function fetchOpenings(){
-			var defered=$q.defer();
-			$http.get(OPENINGS_CONSTANTS.OPENINGS_URL).success(function(response){
-				defered.resolve(response);
-			}).error(function(error){
-				defered.reject(error);
-			});
-			return defered.promise;
-		}
-		
-		function getSections(templateId){
-			var defered=$q.defer();
-			$http.get(OPENINGS_CONSTANTS.FETCH_SECTIONS_URL+templateId).success(function(response){
-				defered.resolve(response);
-			}).error(function(error){
-				defered.reject(error);
-			});
-			return defered.promise;
-		}
-		
-		function submitSections(resume,submissionId,defered){
-			
-			angular.forEach(resume.sections,function(section,index){
-				
-				var payload = new FormData();
-				
-				 payload.append('sectionName', section.sectionName);
-				 payload.append('submissionId', submissionId);
-				 payload.append('userRating', section.userRating);
-				payload.append('videoFile', section.videoFile);
-				
-				 $.ajax({
-						type : 'POST',
-						url : OPENINGS_CONSTANTS.INSERT_SECTIONS_URL,
-						data : payload,
-						contentType: false,
-						processData : false,
-						success : function(response) {
-							if(index===resume.sections.length-1){
-								defered.resolve("");
-							};
-						},
-						error : function(xhr, status) {
-							defered.reject("error");
-						}
-					});
-			});
-			
-			
-		}
-		
-		
-		
-		function applyJob(resume,jobDetails){
-			var defered=$q.defer();
-			var payload = new FormData();
-			
-			 payload.append('jobId', jobDetails.id);
-			 payload.append('resumeName', resume.attachmentName);
-			 payload.append('resume', resume.attachment);
-			payload.append('availablities', JSON.stringify(resume.interviewAvailability));
-			payload.append('notes', resume.notes);
-			 
-           
-			 $.ajax({
-					type : 'POST',
-					url : OPENINGS_CONSTANTS.APPLY_JOB_URL,
-					data : payload,
-					contentType: false,
-					processData : false,
-					success : function(response) {
-						submitSections(resume,response,defered);
-					},
-					error : function(xhr, status) {
-						 defered.reject("error");
-					}
-				});
-			return defered.promise;
-		}
-		
-		function getApplyFlag(jobId,userId){
-			var defered=$q.defer();
-			$http.get(OPENINGS_CONSTANTS.GET_APPLY_FLAG+jobId+"/"+userId).success(function(response){
-				defered.resolve(response);
-			}).error(function(error){
-				defered.reject(error);
-			});
-			return defered.promise;
-		}
-		
-		return {
-			fetchOpenings:fetchOpenings,
-			getSections:getSections,
-			applyJob:applyJob,
-			submitSections:submitSections,
-			getApplyFlag:getApplyFlag
-		};
-	};
-	
-	openingsFactory.$inject=['$http','OPENINGS_CONSTANTS','$state','$q'];
-	
-	angular.module('amoeba.openings').factory('openingsFactory',openingsFactory);
+	angular.module('amoeba.form').factory('myFormFactory',myFormFactory);
 	
 })();
 
@@ -2717,36 +977,9 @@ angular.module('amoeba.main')
 
 
 
-(function(){
-	
-	function mySubmissionsService(){
-	
-		this.jobId=null;
-		this.jobTitle=null;
-	};
-	
-	mySubmissionsService.$inject=[];
-	
-	angular.module('amoeba.openings').service('mySubmissionsService',mySubmissionsService);
-	
-})();
 
 
 
-
-
-(function(){
-	
-	function openingsService(){
-	
-		this.opening=null;
-	};
-	
-	openingsService.$inject=[];
-	
-	angular.module('amoeba.openings').service('openingsService',openingsService);
-	
-})();
 
 
 

@@ -7,19 +7,11 @@
 			 var payload = new FormData();
 			 payload.append('firstName', profileDetails.firstName);
 			 payload.append('lastName', profileDetails.lastName);
-			 payload.append('phone', profileDetails.phone);
-			 payload.append('location', profileDetails.location);
-			 payload.append('currentJobTitle', profileDetails.currentJobTitle);
-			 payload.append('currentEmployer', profileDetails.currentEmployer);
-			 if(profileDetails.role===0){
-				 payload.append('middleName', profileDetails.middleName);
-				 payload.append('experience', profileDetails.experience);
-				 payload.append('currentSalary', profileDetails.currentSalary);
-				 payload.append('primarySkills', profileDetails.primarySkills);
-				 payload.append('secondarySkills', profileDetails.secondarySkills);
-				 payload.append('prefredLocations', profileDetails.prefredLocations);
-				 payload.append('workAuthorization', profileDetails.workAuthorization);
-				 payload.append('jobType', profileDetails.jobType);
+			 payload.append('phone', profileDetails.number);
+			 payload.append('Address', profileDetails.address);
+			 payload.append('Gender', profileDetails.gender);
+			 if(profileDetails.role===1){
+				 payload.append('email', profileDetails.email);
 			 }
 			 
 			 if(profileDetails.profileImage!==null){
@@ -52,7 +44,7 @@
 	
 	profileFactory.$inject=['$q','PROFILE_CONSTANTS'];
 	
-	angular.module('vResume.profile').factory('profileFactory',profileFactory);
+	angular.module('amoeba.profile').factory('profileFactory',profileFactory);
 	
 })();
 

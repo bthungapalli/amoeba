@@ -1,4 +1,4 @@
 (function(){
 	
-	angular.module('vResume.profile',[]);
+	angular.module('amoeba.profile',[]);
 })();

@@ -11,74 +11,60 @@ import com.js.amoeba.domain.User;
 
 
 
-public class SecurityUser  extends User implements UserDetails  {
+public class SecurityUser extends User implements UserDetails {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 138086893486780306L;
+	private static final long serialVersionUID = -6012656848373743308L;
 
 	public SecurityUser(User user) {
-		if (user != null) {
-	
 		
-			this.setId(user.getId());
-			this.setEmail(user.getEmail());
-			this.setRole(user.getRole());
-			this.setPassword(user.getPassword());
-			this.setFirstName(user.getFirstName());
-			this.setLastName(user.getLastName());
-			this.setPhone(user.getPhone());
-			//this.setUpdatedAt(user.getUpdatedAt());
+		if(user !=null){
+			this.setUserId(user.getUserId());
 			this.setCreatedAt(user.getCreatedAt());
+			this.setEmail(user.getEmail());
+			this.setFirstName(user.getFirstName());
+			this.setUserId(user.getUserId());
+			this.setLastName(user.getLastName());
+			this.setPassword(user.getPassword());
+			this.setRole(user.getRole());
+			this.setGender(user.getGender());
+			this.setNumber(user.getNumber());
+			this.setAddress(user.getAddress());
+			this.setC_id(user.getC_id());
 			this.setConfirmed(user.isConfirmed());
 			this.setVerification(user.isVerification());
-			//this.setMailAccount(user.getMailAccount());
-			this.setAddress(user.getAddress());
-			this.setGender(user.getGender());
-			this.setExpiryDate((user.getExpiryDate()));
+			
 		}
-		}
-	
-	
-	
+	}
+
 	@Override
-	public Collection<GrantedAuthority> getAuthorities() {
+	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		
 		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(
 				verifyUserRole());
 				
 		authorities.add(authority);
 		return authorities;
 	}
+
 	private String verifyUserRole() {
 		switch (this.getRole()) {
 		case 0:
 			return "ROLE_USER";
 		case 1:
-			return "ROLE_CONSULTANT";
-		case 2:
+			return "ROLE_CONSULTENT";
+		case 2 :
 			return "ROLE_ADMIN";
-		case 3 :
-			return "ROLE_NGO";
 		default:
 			return "ROLE_INVALID";
 		}
 	}
-	
-
-	
-
 
 	@Override
 	public String getPassword() {
 		return super.getPassword();
-	}
-
-	@Override
-	public String getUsername() {
-		return super.getEmail();
 	}
 
 	@Override
@@ -91,18 +77,27 @@ public class SecurityUser  extends User implements UserDetails  {
 		return true;
 	}
 
-
-
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 
-
-
 	@Override
 	public boolean isEnabled() {
 		return true;
 	}
+
+	@Override
+	public String getUsername() {
+		return super.getEmail();
+	}
+
+	
+
+	
+
+
+
+
 
 }

@@ -1,8 +1,8 @@
 
 <header class="main-header">
 
-	<a href="" class="logo"> <span class="logo-mini"><b>V</b>R</span> <span
-		class="logo-lg"><b>Video</b>Resume</span>
+	<a href="" class="logo"> <span class="logo-mini"><b>AB</b></span>
+		<span class="logo-lg"><b>Amoeba</b></span>
 	</a>
 	<!-- Header Navbar: style can be found in header.less -->
 	<nav class="navbar navbar-static-top">
@@ -16,20 +16,16 @@
 
 
 				<li class="dropdown user user-menu"><a href=""
-					class="dropdown-toggle" data-toggle="dropdown"> <img
-						class="user-image" alt="User Image" src="images/contacts.ico"
-						ng-if="!userDetails.imagePath" /> <img class="user-image"
-						ng-src="data:image/png;base64,{{userDetails.profieImageBytes}}"
-						ng-if="userDetails.imagePath" /> <span class="hidden-xs">{{userDetails.firstName}}</span>
+					class="dropdown-toggle" data-toggle="dropdown"> 
+					
+					<img class="user-image" alt="User Image" src="images/contacts.ico" ng-if="!userDetails.imagePath" /> 
+						<img class="user-image" ng-src="data:image/png;base64,{{userDetails.profieImageBytes}}" ng-if="userDetails.imagePath" /> 
+						<span class="hidden-xs">{{userDetails.firstName}}</span>
 				</a>
 					<ul class="dropdown-menu" style="width: 0%;">
-						<li><a class="col-xs-12 rightCornerDropDown"
-							ui-sref=".profile"><span class="glyphicon glyphicon-user"></span>Profile</a>
-							<a class="col-xs-12 rightCornerDropDown"
-							ui-sref=".changePassword"><span
-								class="glyphicon glyphicon-pencil"></span>Change Password</a> <a
-							class="col-xs-12 rightCornerDropDown" ng-click="logout();"><span
-								class="glyphicon glyphicon-log-out"></span> Sign out</a></li>
+						<li><a class="col-xs-12 rightCornerDropDown" ui-sref=".profile"><span class="glyphicon glyphicon-user"></span>Profile</a> 
+						<a class="col-xs-12 rightCornerDropDown" ui-sref=".changePassword"><span class="glyphicon glyphicon-pencil"></span>Change Password</a> 
+						<a class="col-xs-12 rightCornerDropDown" ng-click="logout();"><span class="glyphicon glyphicon-log-out"></span> Sign out</a></li>
 
 					</ul></li>
 

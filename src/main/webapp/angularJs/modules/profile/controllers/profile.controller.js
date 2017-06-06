@@ -8,7 +8,7 @@
 			$scope.profileDetails.jobType=($scope.profileDetails.jobType).toString();
 		}
 		
-		$scope.editProfile=function(){
+		$scope.editProfile=function(){    
 			$scope.viewProfile=!$scope.viewProfile;
 			$loading.finish("main");
 		};
@@ -36,6 +36,6 @@
 	
 	profileController.$inject=['$scope','profileFactory','$loading'];
 	
-	angular.module('vResume.profile').controller("profileController",profileController);
+	angular.module('amoeba.profile').controller("profileController",profileController);
 	
 })();

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.js.amoeba.exception.AmoebaDaoException;
+import com.js.amoeba.exception.AmoebaException;
 
 
 //import com.js.Amoeba.utils.AmoebaUtils;
@@ -43,7 +43,7 @@ public class AmoebaUtils {
 		return fileExtension;
 	}
 
-	public String saveFile(MultipartFile attachment, String sources, String path) throws AmoebaDaoException {
+	public String saveFile(MultipartFile attachment, String sources, String path) throws AmoebaException {
 		File fileDirectory = new File(path);
 		if (!fileDirectory.exists()) {
 			fileDirectory.mkdirs();
@@ -55,7 +55,7 @@ public class AmoebaUtils {
 
 			FileCopyUtils.copy(attachment.getBytes(), file);
 		} catch (IllegalStateException | IOException e) {
-			throw new AmoebaDaoException(e.getMessage());
+			throw new AmoebaException(e.getMessage());
 		}
 		return fileName;
 	}

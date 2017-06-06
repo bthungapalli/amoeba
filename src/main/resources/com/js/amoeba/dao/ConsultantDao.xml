@@ -1,19 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.js.amoeba.dao.ConsultantDao">
 
-	<select id="getAllConsultant" resultType="com.js.amoeba.domain.Consultant"
-		>
-		
+	<!-- <resultMap type="com.js.amo.domain.Consultant" id="Consultant">
+		<result    column="c_id"  property="c_id"/>
+		<result  column="subCat" property="subCat"/>
+		<result  column="mainCat" property="mainCat"/>
+		<result  column="specialization" property="specialization"/>
+		<result column="userId" property="userId"/>
+		 <collection property="user" column="userId" select="getUser" autoMapping="true" ></collection>
+		  
+	</resultMap> -->
+
+	<!-- <insert id="saveConsultant"  parameterType="com.js.amo.domain.Consultant" >
+	
+	insert into consultant (experience,mainCat,specialization,subCat,userId) 
+		values(#{experience},#{mainCat},#{specialization},#{subCat},#{userId})
+	</insert> -->
+	
+	<select id="getUser" resultType="com.js.amoeba.domain.User" parameterType="com.js.amoeba.domain.User" >
+		select * from users where userId=#{userId} 
+	   
+	</select> 	
+	<select id="fetchConsultantById" parameterType="com.js.amoeba.domain.User"  resultType="com.js.amoeba.domain.User" >
+		select u.* from  users u where u.userId=#{u_id} and role=1
+	</select>
+	 
+	<select id="getForms" parameterType="com.js.amoeba.domain.User" resultMap="com.js.amoeba.dao.FormDao.form">
+		Select u.*,f.* from users u,userform f  where f.subSpec_Id=#{user.subSpec_Id} and f.mainCat_Id=#{user.mainCat_Id} and f.spec_Id=#{user.spec_Id} and f.status=0 and u.userId=#{user.userId} 
 	</select>
 	
-	<insert id="saveConsultant" parameterType="com.js.amoeba.domain.Consultant">
-		INSERT INTO
-		consultant(experience,
-		specialization,avalibality,simultaneous,uId,subCat)
-		VALUES
-		(#{experience},#{specialization},#{avalibality},#{simultaneous},#{uId},#{subCat})
-	</insert>
-	 
-	</mapper>
 	
+</mapper>

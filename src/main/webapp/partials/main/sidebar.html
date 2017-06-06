@@ -2,10 +2,9 @@
 
 	<section class="sidebar">
 		<ul class="sidebar-menu">
-			<li ng-repeat="(view,authority) in authorities"><a
-				ui-sref="{{view}}" ng-click="setSideBarActive(view);"
-				ng-class="{'sideBarActive':currentView===view}"><i
-					class="{{authority[0]}}"></i> <span>{{authority[1]}}</span></a></li>
+			<li ng-repeat="(view,authority) in authorities">
+			<a ui-sref="{{view}}" ng-click="setSideBarActive(view);" ng-class="{'sideBarActive':currentView===view}"><i class="{{authority[0]}}"></i> <span>{{authority[1]}}</span></a>
+			</li>
 		</ul>
 	</section>
 </aside>

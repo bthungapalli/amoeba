@@ -4,18 +4,25 @@
 		
 		this.getRoles=function(){
 			var roles={
-					"Candidate":0,
-					"Consulting Manager":1,
-					"Hiring Manager":2
+					"User":0,
+					"Consultant":1
 			};
 			return roles;
+		};
+		
+		this.getGender=function(){
+			var gender={
+					"male":"male",
+					"feMale":"feMale"
+			};
+			return gender;
 		};
 		
 	};
 	
 	loginService.$inject=[];
 	
-	angular.module('vResume.login').service('loginService',loginService);
+	angular.module('amoeba.login').service('loginService',loginService);
 	
 })();
 

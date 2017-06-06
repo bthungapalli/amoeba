@@ -11,6 +11,15 @@
 					name="lastName" type="text" placeholder="Last Name"
 					ng-model="userDetails.lastName" required="required" />
 			</div>
+			<div class="row">
+		<div class="col-md-12">
+			<strong>Gender</strong> : <label class="radio-inline"
+				ng-repeat="(name,value) in gender"> <input type="radio"
+				name="{{name}}" id="{{name}}" ng-value="value"
+				ng-model="userDetails.gender"> {{name}}
+			</label>
+		</div>
+	</div>
 			<div class="loginFields">
 				<span class="glyphicon glyphicon-earphone bg-primary"></span> <input
 					name="phone" type="number" placeholder="Mobile"
@@ -32,6 +41,11 @@
 					name="confirmPassword" type="password"
 					placeholder="Confirm Password"
 					ng-model="userDetails.confirmPassword" required="required" />
+			</div>
+			<div class="loginFields">
+				<span class="glyphicon glyphicon-earphone bg-primary"></span> <input
+					name="address" type="text" placeholder="Address"
+					ng-model="userDetails.address" required="required" />
 			</div>
 		</div>
 	</div>

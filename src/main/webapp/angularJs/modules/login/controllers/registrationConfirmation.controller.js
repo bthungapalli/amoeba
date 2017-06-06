@@ -17,6 +17,6 @@
 	
 	registrationConfirmationController.$inject=['$scope','$state','loginFactory','$location','$loading'];
 	
-	angular.module('vResume.login').controller("registrationConfirmationController",registrationConfirmationController);
+	angular.module('amoeba.login').controller("registrationConfirmationController",registrationConfirmationController);
 	
 })();

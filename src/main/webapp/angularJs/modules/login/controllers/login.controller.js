@@ -23,7 +23,9 @@
 				"emailId" : "",
 				"password" : "",
 				"confirmPassword" : "",
-				"role" : 0
+				"role" : 0,
+				"gender":"",
+				"address":""
 			};
 		};
 		
@@ -57,14 +59,15 @@
 		$scope.checkForRememberMe();
 		
 		$scope.roles=loginService.getRoles();
+		$scope.gender=loginService.getGender();
 		
 		
-		$scope.checkEmailAvailable=function(){
+		$scope.checkemailIdAvailable=function(){
 			$scope.loginMessageDetails.errorMessage.signup_emailId="";
 			if($scope.userDetails.emailId!==""){
-				loginFactory.checkEmailAvailable($scope.userDetails.emailId).then(function(response){
+				loginFactory.checkemailIdAvailable($scope.userDetails.emailId).then(function(response){
 					if(response[0]==='alreadyExist'){
-						$scope.loginMessageDetails.errorMessage.signup_emailId="Email Id already exist.";
+						$scope.loginMessageDetails.errorMessage.signup_emailId="emailId Id already exist.";
 					}else{
 						$scope.resetMessages();
 					}
@@ -98,11 +101,13 @@
 						$cookies.remove("emailId");
 					}
 					$rootScope.user=response.user;
+					//for test
+					window.alert($rootScope.user);
 					$state.go("main");
 				}
 				 $loading.finish('login');
 			}).catch(function(error){
-				$scope.loginMessageDetails.errorMessage.login="Either Email or Password is incorrect ";
+				$scope.loginMessageDetails.errorMessage.login="Either emailId or Password is incorrect ";
 				$loading.finish('login');
             });
 		};
@@ -124,7 +129,7 @@
 				}
 				 $loading.finish('login');
 			}).catch(function(error){
-				$scope.loginMessageDetails.errorMessage.login="Either Email or Password is incorrect ";
+				$scope.loginMessageDetails.errorMessage.login="Either emailId or Password is incorrect ";
 				$loading.finish('login');
             });
 		};
@@ -175,9 +180,9 @@
 	            });
 		};
 	};
-	
+	 
 	loginController.$inject=['$rootScope','$scope','$state','loginService','loginFactory','$cookies','$loading'];
 	
-	angular.module('vResume.login').controller("loginController",loginController);
+	angular.module('amoeba.login').controller("loginController",loginController);
 	
 })();

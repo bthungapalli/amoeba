@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.js.amoeba.dao.MessageDao"> 
+
+	<resultMap type="com.js.amoeba.domain.Message" id="messages">
+		<result  column="msg_Id" property="msg_Id"/>
+		<result  column="from_Id" property="from_Id"/>
+		<result  column="to_Id" property="to_Id"/>
+		<result  column="message" property="message"/>
+		<result  column="group_Id" property="group_Id"/>
+		<result  column="sent_date" property="sent_date"/>
+		<collection property="messageUser" column="from_Id" select="userMessage" autoMapping="true"></collection>
+	</resultMap>
+
+	<select id="userMessage"  resultType="com.js.amoeba.domain.User">  
+		select * from users where userId=#{from_Id}
+	</select>
+	<insert id="saveConsultantMessage" parameterType="com.js.amoeba.domain.Message">
+		insert into message (from_Id, to_Id, message, sent_date, group_Id)
+		values(#{message.from_Id},#{message.to_Id},#{message.message},NOW(),#{message.group_Id})
+	</insert>
+	
+	<insert id="saveUserMessage" parameterType="com.js.amoeba.domain.Message">
+		insert into message (from_Id, to_Id, message, sent_date, group_Id)
+		values(#{message.from_Id},#{message.to_Id},#{message.message},NOW(),#{message.group_Id})
+	</insert>      
+		 
+		
+	<select id="getConsultantMessages" resultType="com.js.amoeba.domain.Message" resultMap="messages">
+		select u.*,m.* from users u, message m where group_Id=#{group_id} 
+	</select>
+	  
+</mapper>

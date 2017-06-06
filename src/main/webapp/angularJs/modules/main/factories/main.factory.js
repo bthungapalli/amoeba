@@ -40,7 +40,7 @@
 	
 	mainFactory.$inject=['$rootScope','$http','MAIN_CONSTANTS','$state','$q'];
 	
-	angular.module('vResume.main').factory('mainFactory',mainFactory);
+	angular.module('amoeba.main').factory('mainFactory',mainFactory);
 	
 })();
 

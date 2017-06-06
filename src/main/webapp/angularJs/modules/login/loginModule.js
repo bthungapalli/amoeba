@@ -1,4 +1,4 @@
 (function(){
 	
-	angular.module('vResume.login',[]);
+	angular.module('amoeba.login',[]);
 })();

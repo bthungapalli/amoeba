@@ -6,6 +6,6 @@
 
 	profileService.$inject = [];
 
-	angular.module('vResume.profile').service('profileService', profileService);
+	angular.module('amoeba.profile').service('profileService', profileService);
 
 })();

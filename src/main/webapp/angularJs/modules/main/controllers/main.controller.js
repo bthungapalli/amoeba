@@ -1,6 +1,6 @@
 (function(){
 	
-	function mainController($rootScope,$scope,$state,roleService,mainFactory,$loading,myJobsService){
+	function mainController($rootScope,$scope,$state,roleService,mainFactory,$loading){
 		$loading.start("main");
 		$scope.currentView=".profile";
 		$scope.value=function(userDetails){
@@ -8,7 +8,7 @@
 			$state.go("main.profile");
 			$scope.authorities=roleService.roleAuthorities($scope.userDetails.role);
 			$loading.finish("main");
-		};
+		}; 
 		
 		if($rootScope.user===undefined){
 			mainFactory.checkUser().then(function(response){
@@ -27,9 +27,6 @@
 		};
 		
 		$scope.setSideBarActive=function(view){
-			if(view===".postJob"){
-				myJobsService.editJob=null;
-			}
 			$scope.currentView=view;
 		};
 		
@@ -39,8 +36,8 @@
 		
 	};
 	
-	mainController.$inject=['$rootScope','$scope','$state','roleService','mainFactory','$loading','myJobsService'];
+	mainController.$inject=['$rootScope','$scope','$state','roleService','mainFactory','$loading'];
 	
-	angular.module('vResume.login').controller("mainController",mainController);
+	angular.module('amoeba.login').controller("mainController",mainController);
 	
 })();

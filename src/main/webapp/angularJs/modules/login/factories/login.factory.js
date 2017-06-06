@@ -2,9 +2,9 @@
 	
 	function loginFactory($q,$http,LOGIN_CONSTANTS){
 		
-		function checkEmailAvailable(emailId){
+		function checkEmailAvailable(email){
 			var defered=$q.defer();
-			$http.get(LOGIN_CONSTANTS.CHECK_EMAIL_AVAILABLE+emailId).success(function(response) {
+			$http.get(LOGIN_CONSTANTS.CHECK_EMAIL_AVAILABLE+email).success(function(response) {
 				defered.resolve(response);
 			}).error(function(error) {
 				defered.reject(error);
@@ -23,9 +23,10 @@
 			return defered.promise;
 		};
 		
+		
 		function signup(loginDetails){
 			var defered=$q.defer();
-			var body =  {"email" : loginDetails.emailId,"password": loginDetails.password,"role":loginDetails.role,"firstName":loginDetails.firstName,"lastName":loginDetails.lastName,"phone":loginDetails.phone};
+			var body =  {"email" : loginDetails.emailId,"password": loginDetails.password,"role":loginDetails.role,"firstName":loginDetails.firstName,"lastName":loginDetails.lastName,"number":loginDetails.phone,"gender":loginDetails.gender,"address":loginDetails.address};
 			$http.post(LOGIN_CONSTANTS.SIGNUP_URL,body).success(function(response) {
 				defered.resolve(response);
 			}).error(function(error) {
@@ -57,7 +58,7 @@
 		
 		function confirmationInstructions(loginDetails){
 			var defered=$q.defer();
-			$http.post(LOGIN_CONSTANTS.CONFIRMATION_INSTRUCTIONS_URL+loginDetails.emailId).success(function(response) {
+			$http.post(LOGIN_CONSTANTS.CONFIRMATION_INSTRUCTIONS_URL+loginDetails.email).success(function(response) {
 				defered.resolve(response);
 			}).error(function(error) {
 				defered.reject(error);
@@ -77,7 +78,7 @@
 	
 	loginFactory.$inject=['$q','$http','LOGIN_CONSTANTS'];
 	
-	angular.module('vResume.login').factory('loginFactory',loginFactory);
+	angular.module('amoeba.login').factory('loginFactory',loginFactory);
 	
 })();
 

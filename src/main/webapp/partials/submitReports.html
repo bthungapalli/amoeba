@@ -1,0 +1,67 @@
+<div class="row">
+		<div ng-messages="formSubmitMessageDetails.errorMessage"	class="col-md-12 text-danger">
+				<div ng-message="submit">{{formSubmitMessageDetails.errorMessage.submit}}</div>
+		</div>
+	
+		<div ng-messages="formSubmitMessageDetails.successMessage" class="col-md-12 text-success">
+			<div ng-message="submit">{{formSubmitMessageDetails.successMessage.submit}}</div>
+		</div>
+	</div>
+
+
+<form name="UserDetails" ng-submit="formSubmit();">
+	<div class="col-md-12">
+	<div class="col-md-3" style="margin-top: 1cm">
+	<label for= "title">Title</label>
+		<input type="text" required="required" ng-model = "formDetails.title" placeholder="title">
+	</div>
+	</div>
+	<div class="row"></div>
+	<div class="col-md-12">
+						<div class="col-md-3" style="margin-top: 1cm">
+						<label for="mainCategory"> Main Category </label><br>
+							<select ng-model= "formDetails.mainCat_Id" id="main" required="required" >
+							<option value=1>Cardiology</option>
+							<option value=2>Oncology</option>
+							<option value=3>Radiology</option>
+							<option value=4>Endocrinology</option>
+							</select>
+						</div>
+						<div class="col-md-3" style="margin-top: 1cm">
+						<label for="Specialization"> Specialization </label><br>
+							<select ng-model= "formDetails.spec_Id" id="main" required="required" >
+							<option value=1>Cardiology</option>
+							<option value=2>Oncology</option>
+							<option value=3>Radiology</option>
+							<option value=4>Endocrinology</option>
+							</select>
+						</div>	
+						<div class="col-md-3" style="margin-top: 1cm">
+						<label for="subCategory"> Sub Category </label><br>
+							<select ng-model= "formDetails.subSpec_Id" id="main" required="required" >
+							<option value=1>Cardiology</option>
+							<option value=2>Oncology</option>
+							<option value=3>Radiology</option>
+							<option value=4>Endocrinology</option>
+							</select>
+						</div>
+			</div>
+	<div class="col-md-12">
+	<div class="col-md-8" style="margin-top: 1cm">
+					<label style="margin-bottom: 0px;">Report Description</label>
+					<textarea class="form-control" rows="6" placeholder="Description:" required="required" ng-model="formDetails.reportDescription"></textarea>
+					</div>
+	  
+	  <div class="col-md-4" style="margin-top: 1cm">
+	  <label for="age" >Age</label><br>
+	  <input type="number" min="0" max="110" style="width: 2cm" required="required" placeholder="age" ng-model="formDetails.age"/><br><br>
+	  <label for="height">Height</label><br>
+	  <input type="number" min="1" max="500" style="width: 2cm" required="required" placeholder="in cms" ng-model="formDetails.height"/>&nbsp;
+	  </div> 
+	</div>
+	<div class="col-md-12" >
+						<button type="submit"  style="margin-left: 19.5cm;" class="btn btn-primary btn-default active"  ng-disabled="">Submit</button>
+	</div>
+	
+	
+</form>

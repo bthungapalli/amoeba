@@ -9,7 +9,7 @@
 		$scope.error="";
 		$scope.success="";
 		
-		$scope.changePassword=function(){
+		$scope.changePassword=function(){ 
 			$scope.error="";
 			$scope.success="";
 			if($scope.changePassword.password===$scope.changePassword.confirmPassword){
@@ -28,6 +28,6 @@
 	
 	changePasswordController.$inject=['$rootScope','$scope','$state','roleService','mainFactory','$loading'];
 	
-	angular.module('vResume.login').controller("changePasswordController",changePasswordController);
+	angular.module('amoeba.login').controller("changePasswordController",changePasswordController);
 	
 })();

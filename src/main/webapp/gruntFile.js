@@ -7,7 +7,7 @@ module.exports=function(grunt){
 				stripBanners:true
 			},
 			dist: {
-			      src: ['angularJs/amoeba.js','angularJs/modules/*/*.js','angularJs/modules/login/**/*.js','angularJs/modules/main/**/*.js','angularJs/modules/profile/**/*.js','angularJs/modules/templates/**/*.js','angularJs/modules/myJobs/**/*.js','angularJs/modules/users/**/*.js','angularJs/modules/openings/**/*.js'],
+			      src: ['angularJs/amoeba.js','angularJs/modules/*/*.js','angularJs/modules/login/**/*.js','angularJs/modules/main/**/*.js','angularJs/modules/profile/**/*.js','angularJs/modules/form/**/*.js'],
 			      dest: 'dist/amoeba.js',
 			 }
 		},
@@ -15,7 +15,7 @@ module.exports=function(grunt){
 			configFile: ".eslintrc",
 		    format: require('eslint-html-reporter'),
 		    outputFile: "reports/eslint-report.html",
-	        target: ['angularJs/amoeba.js','angularJs/modules/*/*.js','angularJs/modules/login/**/*.js','angularJs/modules/main/**/*.js','angularJs/modules/profile/**/*.js','angularJs/modules/templates/**/*.js','angularJs/modules/myJobs/**/*.js','angularJs/modules/users/**/*.js','angularJs/modules/openings/**/*.js']
+	        target: ['angularJs/amoeba.js','angularJs/modules/*/*.js','angularJs/modules/login/**/*.js','angularJs/modules/main/**/*.js','angularJs/modules/profile/**/*.js','angularJs/modules/form/**/*.js']
 	    }
 	})
 	

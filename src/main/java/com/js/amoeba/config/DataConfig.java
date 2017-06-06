@@ -17,12 +17,11 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 @Configuration
 @MapperScan("com.js.amoeba.dao")
 public class DataConfig {
-
 	
 	@Value("${environment.name}")
 	public String environmentName;
 	
-	@Value("${db.url}")
+		@Value("${db.url}")
 	public String url;
 	
 	@Value("${db.username}")
@@ -30,7 +29,7 @@ public class DataConfig {
 	
 	@Value("${db.password}")
 	public String password;
-
+	
 
 	@Bean
 	public DataSource dataSource1() {
@@ -61,6 +60,14 @@ public class DataConfig {
 		sessionFactory.setTypeAliasesPackage("com.js.amoeba.domain");
 		return sessionFactory;
 	}
+
+	
+	/*
+	 * @Bean public SqlSessionTemplate sqlSessionTemplate() throws Exception {
+	 * SqlSessionTemplate template = new SqlSessionTemplate( (SqlSessionFactory)
+	 * sqlSessionFactory()); return template; }
+	 */
+	
 	/**
 	   * Add PropertySourcesPlaceholderConfigurer to make placeholder work.
 	   * This method MUST be static
@@ -73,7 +80,7 @@ public class DataConfig {
 	     
 	    PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer =  new PropertySourcesPlaceholderConfigurer();
 	     
-	    /*// get active profile
+	    // get active profile
 	    activeProfile = System.getProperty("spring.profiles.active");
 	 
 	    // choose different property files for different active profile
@@ -85,7 +92,7 @@ public class DataConfig {
 	    	 	resource = new ClassPathResource("/development.properties");
 	    }
 	    // load the property file
-	    propertySourcesPlaceholderConfigurer.setLocation(resource);*/
+	    propertySourcesPlaceholderConfigurer.setLocation(resource);
 	     
 	    return propertySourcesPlaceholderConfigurer;
 	  }

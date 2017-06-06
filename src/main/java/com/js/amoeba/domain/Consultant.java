@@ -1,20 +1,49 @@
 package com.js.amoeba.domain;
 
+
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 
 public class Consultant {
-
+	
 	@Id
 	private int c_id;
+	
 	private int experience;
-	private String specialization;
-	private int avalibality;
-	private  int formId;
-	private int uId;
-	private int simultaneous;
-	private String subCat;
+	private int  spec_Id;
+	private int mainCat_Id;
+	private String subSpec_Id;
+	private int userId;
+	private Form form;
+	
+	private List<Form> listForms;
+	
+	private List<User> user;
 	
 	
+	
+	
+	
+	
+	public List<User> getUser() {
+		return user;
+	}
+	public void setUser(List<User> user) {
+		this.user = user;
+	}
+	public List<Form> getListForms() {
+		return listForms;
+	}
+	public void setListForms(List<Form> listForms) {
+		this.listForms = listForms;
+	}
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 	public int getC_id() {
 		return c_id;
 	}
@@ -27,40 +56,35 @@ public class Consultant {
 	public void setExperience(int experience) {
 		this.experience = experience;
 	}
-	public String getSpecialization() {
-		return specialization;
+	
+	public int getSpec_Id() {
+		return spec_Id;
 	}
-	public void setSpecialization(String specialization) {
-		this.specialization =specialization;
+	public void setSpec_Id(int spec_Id) {
+		this.spec_Id = spec_Id;
 	}
-	public int getAvalibality() {
-		return avalibality;
+	public int getMainCat_Id() {
+		return mainCat_Id;
 	}
-	public void setAvalibality(int avalibality) {
-		this.avalibality = avalibality;
+	public void setMainCat_Id(int mainCat_Id) {
+		this.mainCat_Id = mainCat_Id;
 	}
-	public int getFormId() {
-		return formId;
+	public String getSubSpec_Id() {
+		return subSpec_Id;
 	}
-	public void setFormId(int formId) {
-		this.formId = formId;
+	public void setSubSpec_Id(String subSpec_Id) {
+		this.subSpec_Id = subSpec_Id;
 	}
-	public int getuId() {
-		return uId;
+	public Form getForm() {
+		return form;
 	}
-	public void setuId(int uId) {
-		this.uId = uId;
+	public void setForm(Form form) {
+		this.form = form;
 	}
-	public int getSimultaneous() {
-		return simultaneous;
-	}
-	public void setSimultaneous(int simultaneous) {
-		simultaneous = simultaneous;
-	}
-	public String getSubCat() {
-		return subCat;
-	}
-	public void setSubCat(String subCat) {
-		this.subCat = subCat;
-	}
+	
+	
+	
+	
+	
+
 }
