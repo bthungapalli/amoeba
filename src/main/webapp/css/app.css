@@ -135,19 +135,23 @@
 	text-align: right;
 }
 
-#postJob  .form-group>input {
-	border-radius: 5px;
-	border: 0.5px solid #b5e0c5;
+#reportPage .control-header{
+	background-color: #e5fffb;
 }
 
-#postJob  .form-group>textarea {
+#submitReport  .form-group>input {
 	border-radius: 5px;
-	border: 0.5px solid #b5e0c5;
+	border: 0.5px solid #ceae8e;
 }
 
-#postJob  .form-group>select {
+#submitReport  .form-group>textarea {
 	border-radius: 5px;
-	border: 0.5px solid #b5e0c5;
+	border: 0.5px solid #ceae8e;
+}
+
+#submitReport  .form-group>select {
+	border-radius: 5px;
+	border: 0.5px solid #ceae8e;
 }
 
 #myJobs, #viewSubmissions {
