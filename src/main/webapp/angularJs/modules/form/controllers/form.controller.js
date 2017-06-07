@@ -11,7 +11,7 @@
 			$scope.rememberMe=!$scope.rememberMe;
 		};
 		
-		$scope.assignState('main.form');
+		$scope.assignState('main.form'); 
 		
 		$scope.resetFormDetails=function() {
 			$scope.formDetails = {

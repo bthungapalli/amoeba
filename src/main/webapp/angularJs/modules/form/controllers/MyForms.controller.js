@@ -3,7 +3,7 @@
 	function myFormController($scope,myFormFactory,$state,$loading){
 		
 		/*$scope.postJob=function(){
-			myJobsService.editJob=null;
+			myJobsService.editJob=null; 
 			$scope.$emit('sideBarViewEvent', ".submitedForms");
 			$state.go('main.submitedForms');
 		};

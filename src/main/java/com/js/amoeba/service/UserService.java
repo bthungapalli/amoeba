@@ -29,6 +29,7 @@ public class UserService {
 	@Autowired
 	private UserDao userDao;
 	
+	@Autowired
 	private MailUtil mailUtils;
 	
 	
@@ -102,6 +103,7 @@ public class UserService {
 		}
 		
 	}
+	
 	/**
 	 * @param user
 	 * @param newPassword
@@ -110,7 +112,9 @@ public class UserService {
 	public void updatePassword(User user, String newPassword) throws AmoebaException, MessagingException {
 		user.setPassword(encodePassword(newPassword));
 		userDao.updatePassword(user);
-		
+		System.out.println(1);
+		mailUtils.forgetPasswordNotifyMail(user,newPassword);
+		System.out.println(2);
 	}
 		
 	private String generateRandomPassword() {

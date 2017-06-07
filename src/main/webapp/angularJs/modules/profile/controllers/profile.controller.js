@@ -6,7 +6,7 @@
 		if($scope.userDetails!==undefined){
 			$scope.profileDetails=angular.copy($scope.userDetails);
 			$scope.profileDetails.jobType=($scope.profileDetails.jobType).toString();
-		}
+		} 
 		
 		$scope.editProfile=function(){    
 			$scope.viewProfile=!$scope.viewProfile;

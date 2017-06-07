@@ -52,6 +52,7 @@ import com.js.amoeba.service.UserService;
 
 
 
+
 @RestController
 public class UserController {
 	
@@ -292,15 +293,14 @@ public class UserController {
 		}
 	}
 
-	@RequestMapping(value = "/forgotPassword", method = RequestMethod.GET)
-	public ResponseEntity<?> getNewpassword(@RequestParam("email") String email,HttpServletRequest request) throws MessagingException, AmoebaException {
+	@RequestMapping(value = "/forgotPassword", method = RequestMethod.POST)
+	public ResponseEntity<?> getNewpassword(@RequestBody String email) throws MessagingException, AmoebaException {
 		Map<String, String> model = new HashMap<>();
-		User user=userService.getUserDetailsByUserName(email);
-		if (user.isConfirmed() == true) {
-			String url=contextPath+"/updatePassword";
-			
-			mailUtil.sendMailForPswd(user, url);
-			model.put("status", "we sent a mail to your account please check your mail and change your password");
+		JSONObject jsonObject = new JSONObject(email);
+		String inputEmail = jsonObject.getString("email");
+		String registered = userService.getNewPassword(inputEmail);
+		if (registered.equalsIgnoreCase("Registed")) {
+			model.put("status", "success");
 		} else {
 			model.put("status", "You are not Registred User");
 		}
@@ -308,29 +308,6 @@ public class UserController {
 
 	}
 	
-	@RequestMapping(value="/updatePassword", method=RequestMethod.POST)
-	public ResponseEntity<?> updatePassword(@RequestBody NewPassword newPassword,HttpServletRequest request){
-		System.out.println(1);
-		System.out.println(newPassword.getEmail());
-		
-		//System.out.println(newPassword.getNewPassword().equals(newPassword.getConfirmPassword()));
-		try {
-		//if(newPassword.getNewPassword().equals(newPassword.getConfirmPassword())){
-			System.out.println(2);
-		User user=userService.getUserDetailsByUserName(newPassword.getEmail());
-		System.out.println(user.getFirstName());
-		
-			userService.updatePassword(user, newPassword.getConfirmPassword());
-	//}
-		return new ResponseEntity<>("your password is successfull Changed",HttpStatus.OK);
-		} catch (AmoebaException | MessagingException e) {
-			logger.error("getting error while update the password"+e.getMessage());
-			return new ResponseEntity<>("Sorry your password doesn't chanded",HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		
-		
-	}
-
 	@RequestMapping(value = "/changePassword", method = RequestMethod.POST)
 	public ResponseEntity<?> changePassword(@RequestBody String password)
 			throws AmoebaException, MessagingException {
@@ -347,5 +324,6 @@ public class UserController {
 		model.put("message", "Not registerd User");
 		return new ResponseEntity<Map<String, String>>(model, HttpStatus.UNAUTHORIZED);
 	}
+	
 
 }

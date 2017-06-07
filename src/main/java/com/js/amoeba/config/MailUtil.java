@@ -79,53 +79,24 @@ public class MailUtil {
 		return new AsyncResult<Void>(null);
 	}
 	
-	@Async
-	@Bean
-	@Lazy
-	// method to send a mail
-	public Future<Void> sendMailForPswd(User user, String url) throws MessagingException {
-		long startTime = System.currentTimeMillis();
-		ClassLoader classLoader = getClass().getClassLoader();
-		final Context ctx = new Context();
-		// ctx.setVariable("name", StringUtils.capitalize(user.getFirstName()+"
-		// "+user.getLastName()));
-		ctx.setVariable("email", user.getUserName());
-		ctx.setVariable("path", url);
-		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, 1, "utf-8");
-		helper.setFrom(from);
-		helper.setSubject("forget password");
-		helper.setTo(user.getEmail());
-		helper.setText(templateEngine.process("forgetPassword", ctx), true);
-		/*
-		 * try { InputStreamSource imageSource = new ByteArrayResource(
-		 * IOUtils.toByteArray(classLoader
-		 * .getResourceAsStream("mail/impact_Logo.png")));
-		 * helper.addInline("impact_Logo.png", imageSource, "image/png"); }
-		 * catch (IOException e) { e.printStackTrace(); }
-		 */
-		javaMailSender.send(mimeMessage);
-		long endTime = System.currentTimeMillis();
-		System.out.println("Total execution time for Sending Email: " + (endTime - startTime) + "ms");
-		return new AsyncResult<Void>(null);
-	}
-
-
-
+	
 	@Async
 	@Bean
 	@Lazy
 	public Future<Void> forgetPasswordNotifyMail(User user, String newPassword) throws MessagingException {
+		System.out.println(user.getEmail());
 		long startTime = System.currentTimeMillis();
 		final Context ctx = new Context();
-		String email = user.getUserName();
+		String email = user.getEmail();
+		System.out.println(email);
 		ctx.setVariable("email", email);
 		ctx.setVariable("password", newPassword);
-		ctx.setVariable("name", user.getFirstName()+" "+user.getLastName());
+		ctx.setVariable("name", user.getFirstName()+ " " +user.getLastName());
 		ctx.setVariable("path", contextPath);
 
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, 1, "utf-8");
+		System.out.println(3);
 		helper.setFrom(from);
 		helper.setSubject(AmoebaConstants.PASSWORD_CHANGED);
 		helper.setTo(email);

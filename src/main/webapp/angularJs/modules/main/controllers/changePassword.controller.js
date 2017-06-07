@@ -5,7 +5,7 @@
 		$scope.changePassword={
 				"password":"",
 				"confirmPassword":""
-		};
+		}; 
 		$scope.error="";
 		$scope.success="";
 		
