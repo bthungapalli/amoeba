@@ -7,7 +7,7 @@
 						$scope.success=response.success;
 					}
 					$loading.finish('register');
-				}).catch(function(error){
+				}).catch(function(error){ 
 					$scope.error=error.failed;
 					$loading.finish('register');
 	            });

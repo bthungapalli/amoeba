@@ -4,7 +4,7 @@
 <mapper namespace="com.js.amoeba.dao.ConsultantDao">
 
 	<!-- <resultMap type="com.js.amo.domain.Consultant" id="Consultant">
-		<result    column="c_id"  property="c_id"/>
+		<result  column="c_id"  property="c_id"/>
 		<result  column="subCat" property="subCat"/>
 		<result  column="mainCat" property="mainCat"/>
 		<result  column="specialization" property="specialization"/>

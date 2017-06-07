@@ -7,7 +7,7 @@
 		
 		$scope.assignState=function(state){
 			$rootScope.activeState=state;
-		};
+		}; 
 		
 		$scope.rememberMe1=function(){
 			$scope.rememberMe=!$scope.rememberMe;
@@ -101,8 +101,7 @@
 						$cookies.remove("emailId");
 					}
 					$rootScope.user=response.user;
-					//for test
-					window.alert($rootScope.user);
+					
 					$state.go("main");
 				}
 				 $loading.finish('login');
@@ -162,7 +161,7 @@
 					$scope.loginMessageDetails.successMessage.signup_emailId=response.success;
 					$scope.resetUserDetails();
 					$loading.finish('login');
-				}).catch(function(error){
+				}). catch(function(error){
 					$scope.loginMessageDetails.errorMessage.signup_emailId="Something went wrong  please contact administrator";
 					$loading.finish('login');
 	            });

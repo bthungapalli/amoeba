@@ -9,7 +9,7 @@
 			$scope.authorities=roleService.roleAuthorities($scope.userDetails.role);
 			$loading.finish("main");
 		}; 
-		
+		 
 		if($rootScope.user===undefined){
 			mainFactory.checkUser().then(function(response){
 				$rootScope.user=response.user;

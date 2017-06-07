@@ -123,6 +123,11 @@
 
 (function(){
 	
+	angular.module('amoeba.form',[]);
+})();
+
+(function(){
+	
 	angular.module('amoeba.login',[]);
 })();
 
@@ -134,11 +139,6 @@
 (function(){
 	
 	angular.module('amoeba.profile',[]);
-})();
-
-(function(){
-	
-	angular.module('amoeba.form',[]);
 })();
 
 (function(){
@@ -257,6 +257,8 @@
 						$cookies.remove("emailId");
 					}
 					$rootScope.user=response.user;
+					//for test
+					window.alert($rootScope.user);
 					$state.go("main");
 				}
 				 $loading.finish('login');
@@ -640,20 +642,20 @@ angular.module('amoeba.main')
 
 	function roleService() {
 		this.roleAuthorities = function(role) {
-			var roleAuthorities = {
-				"0" : {
-					"":["glyphicon glyphicon-user","User"],
-					".form":["glyphicon glyphicon-modal-window","SubmitQuery"],
-					".submitedForms":["glyphicon glyphicon-share","submitedForms"]
-				} ,
-				"1" : {
-					"":["glyphicon glyphicon-user","Consultant"],
-					".myForms":["glyphicon glyphicon-pencil","myForms"],
-					".activeForms":["glyphicon glyphicon-screenshot","activeForms"]
+			var roleAuthorities =  {
+					"0" : {
+						"":["glyphicon glyphicon-user","User"],
+						".form":["glyphicon glyphicon-modal-window","SubmitQuery"],
+						".submitedForms":["glyphicon glyphicon-share","submitedForms"]
+					} ,
+					"1" : {
+						"":["glyphicon glyphicon-user","Consultant"],
+						".myForms":["glyphicon glyphicon-pencil","myForms"],
+						".activeForms":["glyphicon glyphicon-screenshot","activeForms"]
+						
+					}
 					
-				}
-				
-			};
+				};
 
 			return roleAuthorities[role];
 		};
@@ -665,7 +667,6 @@ angular.module('amoeba.main')
 	angular.module('amoeba.main').service('roleService', roleService);
 
 })();
-
 
 (function(){
 	
@@ -682,10 +683,10 @@ angular.module('amoeba.main')
 		$scope.viewProfile=true;
 		if($scope.userDetails!==undefined){
 			$scope.profileDetails=angular.copy($scope.userDetails);
-			//$scope.profileDetails.jobType=($scope.profileDetails.jobType).toString();
+			$scope.profileDetails.jobType=($scope.profileDetails.jobType).toString();
 		}
 		
-		$scope.editProfile=function(){
+		$scope.editProfile=function(){    
 			$scope.viewProfile=!$scope.viewProfile;
 			$loading.finish("main");
 		};
@@ -744,19 +745,11 @@ angular.module('amoeba.main')
 			 var payload = new FormData();
 			 payload.append('firstName', profileDetails.firstName);
 			 payload.append('lastName', profileDetails.lastName);
-			 payload.append('phone', profileDetails.phone);
-			 payload.append('location', profileDetails.location);
-			 payload.append('currentJobTitle', profileDetails.currentJobTitle);
-			 payload.append('currentEmployer', profileDetails.currentEmployer);
-			 if(profileDetails.role===0){
-				 payload.append('middleName', profileDetails.middleName);
-				 payload.append('experience', profileDetails.experience);
-				 payload.append('currentSalary', profileDetails.currentSalary);
-				 payload.append('primarySkills', profileDetails.primarySkills);
-				 payload.append('secondarySkills', profileDetails.secondarySkills);
-				 payload.append('prefredLocations', profileDetails.prefredLocations);
-				 payload.append('workAuthorization', profileDetails.workAuthorization);
-				 payload.append('jobType', profileDetails.jobType);
+			 payload.append('phone', profileDetails.number);
+			 payload.append('Address', profileDetails.address);
+			 payload.append('Gender', profileDetails.gender);
+			 if(profileDetails.role===1){
+				 payload.append('email', profileDetails.email);
 			 }
 			 
 			 if(profileDetails.profileImage!==null){
@@ -814,6 +807,7 @@ angular.module('amoeba.main')
 	angular.module('amoeba.form').constant("FORM_CONSTANTS",{
 		
 		"SUBMIT_FORM_URL":"/amoeba/formSub",
+		"GET_FORMS":"/amoeba/getForm"
 		
 	});
 
@@ -824,8 +818,6 @@ angular.module('amoeba.main')
 	function formController($rootScope,$scope,$state,formFactory,$cookies,$loading){
 		
 		$state.go("main.form");
-		$scope.rememberMe=false;
-		
 		$scope.assignState=function(state){
 			$rootScope.activeState=state;
 		};
@@ -889,31 +881,6 @@ angular.module('amoeba.main')
 
 (function(){
 	
-	function formFactory($q,$http,FORM_CONSTANTS){
-		
-		function formSubmit(formDetails){
-			var defered=$q.defer();
-			var body =  {"title" : formDetails.title,"reportDescription" : formDetails.reportDescription,"age": formDetails.age,"height":formDetails.height,"status":formDetails.status,"spec_Id":formDetails.spec_Id,"weight":formDetails.weight,"mainCat_Id":formDetails.mainCat_Id,"subSpec_Id":formDetails.subSpec_Id};
-			$http.post(FORM_CONSTANTS.SUBMIT_FORM_URL,body).success(function(response) {
-				defered.resolve(response);
-			}).error(function(error) {
-				defered.reject(error);
-			});
-			return defered.promise;
-		};
-		
-		return {
-			formSubmit:formSubmit
-		};
-	};
-	
-	formFactory.$inject=['$q','$http','FORM_CONSTANTS'];
-	
-	angular.module('amoeba.form').factory('formFactory',formFactory);
-	
-})();
-(function(){
-	
 	function myFormController($scope,myFormFactory,$state,$loading){
 		
 		/*$scope.postJob=function(){
@@ -944,6 +911,38 @@ angular.module('amoeba.main')
 	angular.module('amoeba.form').controller("myFormController",myFormController);
 	
 })();
+
+(function(){
+	
+	function formFactory($q,$http,FORM_CONSTANTS){
+		
+		function formSubmit(formDetails){
+			var defered=$q.defer();
+			var body =  {"title" : formDetails.title,"reportDescription" : formDetails.reportDescription,"age": formDetails.age,"height":formDetails.height,"status":formDetails.status,"spec_Id":formDetails.spec_Id,"weight":formDetails.weight,"mainCat_Id":formDetails.mainCat_Id,"subSpec_Id":formDetails.subSpec_Id};
+			$http.post(FORM_CONSTANTS.SUBMIT_FORM_URL,body).success(function(response) {
+				defered.resolve(response);
+			}).error(function(error) {
+				defered.reject(error);
+			});
+			return defered.promise;
+		};
+		
+		
+		return {
+			formSubmit:formSubmit
+		};
+	};
+	
+	formFactory.$inject=['$q','$http','FORM_CONSTANTS'];
+	
+	angular.module('amoeba.form').factory('formFactory',formFactory);
+	
+})();
+
+
+
+
+
 (function(){
 	
 	function myFormFactory($http,FORM_CONSTANTS,$q){
@@ -972,14 +971,6 @@ angular.module('amoeba.main')
 	angular.module('amoeba.form').factory('myFormFactory',myFormFactory);
 	
 })();
-
-
-
-
-
-
-
-
 
 
 

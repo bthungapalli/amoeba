@@ -53,9 +53,9 @@ public interface UserDao {
 	@Select("Select * from users where userId = #{userId}")
 	public User fetchUserById(@Param("userId") Integer userId) throws AmoebaException;
 
-	@Update("update users set password=#{user.password}  where email=#{user.email}")
+	@Update("update users set password=#{user.password} , updatedAt=NOW() where email=#{user.email}")
 	public void updatePassword(@Param("user") User user);
-
+	
 	@Update("update users set experience=#{consultant.experience}, mainCat=#{consultant.mainCat},specialization=#{consultant.specialization}, subCat=#{consultant.subCat} where email=#{securityUser.email} AND role = 1")
 	public void updateUser1(@Param("securityUser")SecurityUser securityUser, @Param("consultant")Consultant consultant);
 
