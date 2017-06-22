@@ -21,7 +21,7 @@ public class User {
 	private Date createdAt;
 	private int  spec_Id;
 	private int mainCat_Id;
-	private String subSpec_Id;
+	private int subSpec_Id;
 	
 private boolean verification = false;
 	
@@ -44,10 +44,11 @@ private boolean verification = false;
 	public void setMainCat_Id(int mainCat_Id) {
 		this.mainCat_Id = mainCat_Id;
 	}
-	public String getSubSpec_Id() {
+
+	public int getSubSpec_Id() {
 		return subSpec_Id;
 	}
-	public void setSubSpec_Id(String subSpec_Id) {
+	public void setSubSpec_Id(int subSpec_Id) {
 		this.subSpec_Id = subSpec_Id;
 	}
 	public Date getUpdatedAt() {

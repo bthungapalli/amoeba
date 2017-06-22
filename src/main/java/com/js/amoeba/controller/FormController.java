@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.js.amoeba.config.SecurityUser;
@@ -51,7 +52,7 @@ public class FormController {
 			
 		} catch (Exception e) {
 			logger.error("getting error while submitting form ::" +e.getMessage());
-			map.put("Failur", "getting error while submitting form ");
+			map.put("Failure", "getting error while submitting form ");
 			return new ResponseEntity<Map<String,String>>(map,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
@@ -67,12 +68,12 @@ public class FormController {
 			return new ResponseEntity<> (form, HttpStatus.OK);
 			return new ResponseEntity<> ("form not found for this id", HttpStatus.OK);
 		} catch (AmoebaException e) {
-			logger.error("erroe wile getting form : : :" +e.getMessage());
+			logger.error("erroe while getting form : : :" +e.getMessage());
 			return new ResponseEntity<>("Error",HttpStatus.INTERNAL_SERVER_ERROR);
 		}	
 	}
 	
-	@RequestMapping(value="/getForm",method=RequestMethod.GET)
+	/*@RequestMapping(value="/getForm",method=RequestMethod.GET)
 	public ResponseEntity<?> getFormById(HttpServletRequest request){
 		
 		try {
@@ -83,8 +84,21 @@ public class FormController {
 			logger.error("erroe wile getting form : : :" +e.getMessage());
 			return new ResponseEntity<>("Error",HttpStatus.INTERNAL_SERVER_ERROR);
 		}	
-	}
+	}*/
 	
+	@RequestMapping(value="/get/{userId}",method=RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<?> getFormById(@PathVariable("userId") int userId,HttpServletRequest request){
+		
+		try {
+			System.out.println(userId);
+			return new ResponseEntity<List<Form>> (formService.getFormById(userId), HttpStatus.OK);
+			
+		} catch (AmoebaException e) {
+			logger.error("erroe wile getting form : : :" +e.getMessage());
+			return new ResponseEntity<>("Error",HttpStatus.INTERNAL_SERVER_ERROR);
+		}	
+	}
 	
 	@RequestMapping(value="/sendMessage/{to_Id}", method=RequestMethod.POST)
 	public ResponseEntity<?> sendMessage(@RequestBody Message message,@PathVariable("to_Id") int to_Id, HttpServletRequest request){
@@ -100,7 +114,7 @@ public class FormController {
 			
 			return new ResponseEntity<>(messageService.getConsultantMessage(group_id),HttpStatus.OK);
 		} catch (AmoebaException e) {
-			logger.error("error whhile Sendinng message"+e.getMessage());
+			logger.error("error while Sendinng message"+e.getMessage());
 			return new ResponseEntity<>("Faild",HttpStatus.OK);
 		}
 		

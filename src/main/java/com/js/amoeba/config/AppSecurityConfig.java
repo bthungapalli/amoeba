@@ -14,8 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-
-
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	
@@ -35,7 +33,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
-		http.csrf().disable().httpBasic().realmName("vresume").and().authorizeRequests().antMatchers("/registration/")
+		http.csrf().disable().httpBasic().realmName("Amoeba").and().authorizeRequests().antMatchers("/registration/")
 				.permitAll().antMatchers("/forgotPassword/").permitAll().antMatchers("/resources/**").permitAll()
 				.antMatchers("/css/**").permitAll().antMatchers("/js/**").permitAll().antMatchers("/angularJs/**")
 				.permitAll().antMatchers("/images/**").permitAll().antMatchers("/dist/**").permitAll()

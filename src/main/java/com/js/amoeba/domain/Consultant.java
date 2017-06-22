@@ -13,7 +13,7 @@ public class Consultant {
 	private int experience;
 	private int  spec_Id;
 	private int mainCat_Id;
-	private String subSpec_Id;
+	private int subSpec_Id;
 	private int userId;
 	private Form form;
 	
@@ -69,10 +69,11 @@ public class Consultant {
 	public void setMainCat_Id(int mainCat_Id) {
 		this.mainCat_Id = mainCat_Id;
 	}
-	public String getSubSpec_Id() {
+	
+	public int getSubSpec_Id() {
 		return subSpec_Id;
 	}
-	public void setSubSpec_Id(String subSpec_Id) {
+	public void setSubSpec_Id(int subSpec_Id) {
 		this.subSpec_Id = subSpec_Id;
 	}
 	public Form getForm() {

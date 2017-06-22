@@ -34,6 +34,8 @@ public interface ConsultantDao {
 	
 	public List<User> getForms(@Param("user") User user) throws AmoebaException;
 	
+	public List<User> getMyForms(@Param("user") User user) throws AmoebaException;
+	
 	public List<Form> getUser(int userId);
 	
 	@Update("update userform set c_id=#{u_id}, status=1  where f_id=#{f_id}")

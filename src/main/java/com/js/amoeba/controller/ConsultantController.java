@@ -112,6 +112,22 @@ public class ConsultantController {
 		
 		
 	}
+	@RequestMapping(value="/getMyForms", method=RequestMethod.GET)
+	public ResponseEntity<?> getMyForms(HttpServletRequest request){
+		
+		try {
+			SecurityUser sUser=(SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			int u_id=sUser.getUserId();
+			System.out.println(u_id);
+			User user=consultantService.getConsultantById(u_id);
+			return new ResponseEntity<>(consultantService.getMyForms(user),HttpStatus.OK);
+		} catch (AmoebaException e) { 
+			logger.error("error getting forms"+e.getMessage());
+			return new ResponseEntity<>("error",HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		
+	}
 	
 	@RequestMapping(value="/acceptForm/{f_id}",method=RequestMethod.PUT)
 	public ResponseEntity<?> updateForm(HttpServletRequest request,  @PathVariable("f_id") int f_id){
@@ -122,8 +138,9 @@ public class ConsultantController {
 		try {
 			System.out.println(id);
 			consultantService.updateUserForm(id, f_id);
-			map.put("success", "your Successfully Accepted Form");
-			return new ResponseEntity<>(map,HttpStatus.OK);
+			return new ResponseEntity<>(formService.getUserFormById(f_id),HttpStatus.OK);
+			//map.put("success", "your Successfully Accepted Form");
+			//return new ResponseEntity<>(map,HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error("getting error while updating userform"+e.getMessage());
 			map.put("error", "your getting error");
@@ -146,8 +163,8 @@ public class ConsultantController {
 			messageService.sendConsultantMessage(message); 
 			return new ResponseEntity<>(messageService.getConsultantMessage(group_id),HttpStatus.OK);
 		} catch (AmoebaException e) {
-			logger.error("error whhile Sendinng message"+e.getMessage());
-			return new ResponseEntity<>("Faild",HttpStatus.OK);
+			logger.error("error while Sendinng message"+e.getMessage());
+			return new ResponseEntity<>("Failed",HttpStatus.OK);
 		}
 		
 	}

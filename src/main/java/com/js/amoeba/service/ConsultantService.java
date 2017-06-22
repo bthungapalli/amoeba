@@ -43,6 +43,13 @@ public class ConsultantService {
 		return consultantDao.getForms(user); 
 	}
 	
+	
+	@Transactional
+	public List<User> getMyForms(User user) throws AmoebaException{
+		
+		return consultantDao.getMyForms(user); 
+	}
+	
 	public void updateUserForm(int u_id,int  f_id) throws Exception{
 		consultantDao.updateForm(u_id, f_id);
 	}

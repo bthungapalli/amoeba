@@ -75,7 +75,6 @@ public class UserController {
 	private final static String REGISTRATION = "/registration";
 
 	
-	
 	@RequestMapping(value = REGISTRATION, method = RequestMethod.POST)
 	public @ResponseBody ResponseEntity<?> saveUser(@RequestBody User user, HttpServletRequest request) {
 		Map<String, String> map = new HashMap<>();
