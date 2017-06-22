@@ -28,7 +28,12 @@
 	</select>
 	 
 	<select id="getForms" parameterType="com.js.amoeba.domain.User" resultMap="com.js.amoeba.dao.FormDao.form">
-		Select u.*,f.* from users u,userform f  where f.subSpec_Id=#{user.subSpec_Id} and f.mainCat_Id=#{user.mainCat_Id} and f.spec_Id=#{user.spec_Id} and f.status=0 and u.userId=#{user.userId} 
+		Select u.*,f.* from users u,userform f  where  f.subSpec_Id=#{user.subSpec_Id} and f.mainCat_Id=#{user.mainCat_Id} and f.spec_Id=#{user.spec_Id} and f.status=0 and u.userId=#{user.userId} 
+	</select>
+	
+	<select id="getMyForms" parameterType="com.js.amoeba.domain.User" resultMap="com.js.amoeba.dao.FormDao.form"> 
+	Select u.*,f.* from users u, userform f  where f.subSpec_Id=#{user.subSpec_Id} and f.mainCat_Id=#{user.mainCat_Id} and f.spec_Id=#{user.spec_Id} and f.status=1 and f.c_id=#{user.userId} and u.userId=#{user.userId}  
+
 	</select>
 	
 	
