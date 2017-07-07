@@ -43,7 +43,7 @@ public interface UserDao {
 
 	@Select("Select * from users where token=#{token}")
 	public VerifyToken verifyToken(String token) throws AmoebaException;
-	
+
 	@Update("Update users set confirmed=#{confirmed} , verification=#{verified} where token =#{token}")
 	public void updateConfirmation(@Param("confirmed") Boolean confirmed, @Param("verified") Boolean verified, @Param("token") String token)throws AmoebaException;
 
