@@ -22,16 +22,16 @@
                 </tr>
                 </thead>
                 
-                <tbody dir-paginate="mySubmission in mySubmissions | filter:search| itemsPerPage: 10 " >
+                <tbody dir-paginate="myformDetails in myformDetails | filter:search| itemsPerPage: 10 " >
               <tr>
-                  <td><label ng-click="getReportDetails(mySubmission.reportId,$index);" class="text-primary" style="cursor: pointer;">{{mySubmission.title}}</label></td>
-                  <td>{{mySubmission.status}}</td>
-                  <td>{{mySubmission.createdAt | date:'MMM dd, yyyy'}}</td>
+                  <td><label ng-click="getFormDetails(myformDetails.f_id,$index);" class="text-primary" style="cursor: pointer;">{{myformDetails.title}}</label></td>
+                  <td>{{myformDetails.status}}</td>
+                  <td>{{myformDetails.submittedAt | date:'MMM dd, yyyy'}}</td>
                 </tr>
                  <tr>
-                 <td ng-show="mySubmission.showDescription" colspan="4" style="text-align: left;background-color: green">
-                 <p > Age : {{mySubmission.reportDetails.age}} | Height : {{mySubmission.reportDetails.feet}}' {{mySubmission.reportDetails.inch}}" | <span class="glyphicon glyphicon-calendar"></span>{{mySubmission.reportDetails.createdAt | date:'dd MMM yyyy'}} </p>
-                 <p ng-bind-html="mySubmission.reportDetails.description | toTrustHtml"> </p>
+                 <td ng-show="myformDetails.showDescription" colspan="4" style="text-align: left;background-color: green">
+                 <p > Age : {{myformDetails.age}} | Height : {{myformDetails.height}}|Weight :{{myformDetails.weight}}| <span class="glyphicon glyphicon-calendar"></span>{{myformDetails.submittedAt | date:'MMM dd, yyyy'}} </p>
+                 <p ng-bind-html="myformDetails.reportDescription | toTrustHtml"> </p>
                  </td>
                 </tr>
                 </tbody>

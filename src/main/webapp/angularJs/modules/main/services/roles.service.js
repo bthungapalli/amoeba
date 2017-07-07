@@ -13,7 +13,11 @@
 						".myForms":["glyphicon glyphicon-pencil","myForms"],
 						".activeForms":["glyphicon glyphicon-screenshot","activeForms"]
 						
-					}
+					} ,
+					"2" : {
+						"":["glyphicon glyphicon-lock","Admin"],
+						".allUsers":["glyphicon glyphicon-modal-window","All Users"]
+					} 
 					
 				};
 

@@ -36,7 +36,7 @@
 					<div class="col-md-4 form-group">
 						<label for="mainCategory"> Main Category </label><br>
 							<select ng-model= "formDetails.mainCat_Id" id="main" required="required" >
-							<option value="0">Select</option>
+							<option value="">Select</option>
 							<option value="1">Cardiology</option>
 							<option value="2">Oncology</option>
 							<option value="3">Radiology</option>
@@ -70,7 +70,7 @@
 				</div>
 				<div class="text-center">
 				
-				<button type="submit" ng-click="createJob();" class="btn  btn-success active">
+				<button type="submit" ng-click="formSubmit();" class="btn  btn-success active">
 			  Submit </button>
 			  
 			  </div>

@@ -68,9 +68,22 @@
 								ng-model="profileDetails.lastName" ng-disabled="viewProfile" />
 						</div>
 						<div class="form-group col-md-6">
-						<label for="gender">Gender :</label>{{job.jobType==0?"Male":"Female	"}}
+						<label for="gender">Gender :</label>{{profileDetails.gender==male?"Male":"Female	"}}
 						
-						</div>
+						</div> 
+						
+				<div class="form-group col-md-3 col-xs-12" >
+					 <label for="gender">
+						Gender :<span class="text-red">*</span>
+					</label><br>
+					<label class="radio-inline">
+					  <input type="radio" name="Male" ng-model="job.jobType" id="Male" value="1"> Male
+					</label>
+					<label class="radio-inline">
+					  <input type="radio" name="Female" ng-model="job.jobType" id="Feamle" value="0"> Female
+					</label> 
+					
+				</div>
 
 						<div class="form-group col-md-6">
 							<label for="phoneNo"> Phone no </label> <input type="number"
@@ -91,6 +104,14 @@
 								ng-model="profileDetails.specializationTitle"
 								ng-disabled="viewProfile" />
 						</div>
+						
+						
+						<div class="form-group col-md-6" ng-if="!userDetails.role==0">
+							<label for="specializationTitle"> SubSpecialization </label> <input
+								type="text" class="form-control" id="subspecializationTitle"
+								ng-model="profileDetails.subspecializationTitle"
+								ng-disabled="viewProfile" />
+						</div>
 
 						<!-- <div class="form-group col-md-6">
 							<label for="currentEmployer"> Current Employer </label> <input
@@ -108,6 +129,7 @@
 						<div class="form-group col-md-6" ng-if="!userDetails.role==0">
 						<label for="mainCategory"> Main Category </label><br>
 							<select ng-model= "profileDetails.mainCategory" class="form-group col-md-6" id="main" required="required" >
+							<option value=" ">--select--</option>
 							<option value="cardiology">Cardiology</option>
 							<option value="oncology">Oncology</option>
 							<option value="radiology">Radiology</option>
@@ -168,7 +190,7 @@
 				</div>
         		
 
-						<div class="form-group col-md-6" ng-if="userDetails.role==0">
+						<!-- <div class="form-group col-md-6" ng-if="userDetails.role==0">
 							<label for="workAuthorization" style="margin-bottom: 17px;">
 								Job Type</label> </br> <label class="radio-inline"> <input
 								type="radio" name="Contract" id="Contract" value="1"
@@ -182,7 +204,7 @@
 								name="Any" id="Any" value="2" ng-model="profileDetails.jobType"
 								ng-disabled="viewProfile"> Any
 							</label>
-						</div>
+						</div> -->
 						<!-- <div class="form-group col-md-6">
 							<label for="workAuthorization"> Email Account</label> </br> <label
 								class="radio-inline"> <input type="radio"

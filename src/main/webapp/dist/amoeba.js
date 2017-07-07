@@ -1,6 +1,6 @@
 (function(){
 	
-	var appModule=angular.module('amoeba',['ui.bootstrap','ngRoute','ui.router','angular-input-stars','angularUtils.directives.dirPagination','ngCookies','darthwade.dwLoading','amoeba.login','amoeba.main','amoeba.profile','amoeba.form']);
+	var appModule=angular.module('amoeba',['ui.bootstrap','ngRoute','ui.router','angular-input-stars','angularUtils.directives.dirPagination','ngCookies','darthwade.dwLoading','amoeba.login','amoeba.main','amoeba.profile','amoeba.form','amoeba.consultant']);
 
 	angular.element(document).ready(function() {
 	    angular.bootstrap("body", ['amoeba']);
@@ -52,18 +52,18 @@
             url: '/submitedForms',
             controller:'myFormController',
             templateUrl: 'partials/mySubmissions.html'
-        }).state('main.myJobs', {
-            url: '/myJobs',
-            controller:'myJobsController',
-            templateUrl: 'partials/myJobs.html'
-        }).state('main.allUsers', {
-            url: '/allUsers',
-            controller:'usersController',
-            templateUrl: 'partials/allUsers.html'
-        }).state('main.mySubmissions', {
-            url: '/mySubmissions',
-            controller:'mySubmissionsController',
+        }).state('main.myForms', {
+            url: '/myForms',
+            controller:'consultantController',
+            templateUrl: 'partials/showReports.html'
+        }).state('main.activeForms', {
+            url: '/activeForms',
+            controller:'activeFormController',
             templateUrl: 'partials/mySubmissions.html'
+        }).state('main.report', {
+            url: '/report',
+            controller:'reportController',
+            templateUrl: 'partials/editTemplate.html'
         }).state('main.viewResume', {
             url: '/viewResume',
             controller:"viewResumeController",
@@ -139,6 +139,11 @@
 (function(){
 	
 	angular.module('amoeba.profile',[]);
+})();
+
+(function(){
+	
+	angular.module('amoeba.consultant',[]);
 })();
 
 (function(){
@@ -257,8 +262,6 @@
 						$cookies.remove("emailId");
 					}
 					$rootScope.user=response.user;
-					//for test
-					window.alert($rootScope.user);
 					$state.go("main");
 				}
 				 $loading.finish('login');
@@ -683,7 +686,7 @@ angular.module('amoeba.main')
 		$scope.viewProfile=true;
 		if($scope.userDetails!==undefined){
 			$scope.profileDetails=angular.copy($scope.userDetails);
-			$scope.profileDetails.jobType=($scope.profileDetails.jobType).toString();
+			//$scope.profileDetails.jobType=($scope.profileDetails.jobType).toString();
 		}
 		
 		$scope.editProfile=function(){    
@@ -749,12 +752,17 @@ angular.module('amoeba.main')
 			 payload.append('Address', profileDetails.address);
 			 payload.append('Gender', profileDetails.gender);
 			 if(profileDetails.role===1){
+				 payload.append('experience', profileDetails.experience);
+				 payload.append('mainCat_Id', profileDetails.mainCat_Id);
+				 payload.append('subSpec_Id', profileDetails.subSpec_Id);
+				 payload.append('subSpec_Id', profileDetails.spec_Id);
+				 
+
 				 payload.append('email', profileDetails.email);
 			 }
-			 
-			 if(profileDetails.profileImage!==null){
+			/* if(profileDetails.profileImage!==null){
 				 payload.append('profileImage', profileDetails.profileImage);
-			 }
+			 }*/
 				 
             
 			 $.ajax({
@@ -790,6 +798,10 @@ angular.module('amoeba.main')
 
 
 
+
+
+
+
 (function() {
 
 	function profileService() {
@@ -807,8 +819,11 @@ angular.module('amoeba.main')
 	angular.module('amoeba.form').constant("FORM_CONSTANTS",{
 		
 		"SUBMIT_FORM_URL":"/amoeba/formSub",
-		"GET_FORMS":"/amoeba/getForm"
-		
+		"GET_MY_FORMS":"/amoeba/get/",
+		"GET_fORM":"/amoeba/getForm/",
+		"GET_FORMS":"/amoeba/getForm",
+		"GET_ACTIVE_fORM":"/amoeba/consultant/getMyForms/"
+
 	});
 
 })();
@@ -881,20 +896,53 @@ angular.module('amoeba.main')
 
 (function(){
 	
-	function myFormController($scope,myFormFactory,$state,$loading){
+
+	function myFormFactory($http,FORM_CONSTANTS,$q,$state){
 		
-		/*$scope.postJob=function(){
-			myJobsService.editJob=null;
-			$scope.$emit('sideBarViewEvent', ".submitedForms");
-			$state.go('main.submitedForms');
+		
+
+		function getForms(userId){
+			var defered=$q.defer();
+			$http.get(FORM_CONSTANTS.GET_MY_FORMS+userId).success(function(response){
+				defered.resolve(response);
+			}).error(function(error){
+				defered.reject(error);
+			});
+			return defered.promise;
 		};
-		*/
+		
+		
+		
+		function getFormDetails(f_id){
+			var defered=$q.defer();
+			$http.get(FORM_CONSTANTS.GET_fORM+f_id).success(function(response){
+				defered.resolve(response);
+			}).error(function(error){
+				defered.reject(error);
+			});
+			return defered.promise;
+		}
+		return {
+			getForms:getForms,
+			getFormDetails:getFormDetails
+		};
+	};
+	
+	myFormFactory.$inject=['$http','FORM_CONSTANTS','$q','$state'];
+	
+	angular.module('amoeba.form').factory('myFormFactory',myFormFactory);
+	
+})();
+
+
+
+
+(function(){
+	
+	function myFormController($rootScope,$scope,myFormFactory,$state,$loading){		
 		$loading.start('main');
-			formFactory.getForms().then(function(response) {
-				/*if(response.form === undefined){
-					$scope.formMessageDetails.errorMessage.submit="you didn't submited any Query ";
-				}*/
-				$scope.formDetails=response;
+		myFormFactory.getForms($scope.userDetails.userId).then(function(response) {
+				$scope.myformDetails=response;
 				console.log(response);
 				$loading.finish("main");
 			}).catch(function(){
@@ -906,7 +954,7 @@ angular.module('amoeba.main')
 		
 	
 	
-	myFormController.$inject=['$scope','myFormFactory','$state','$loading'];
+	myFormController.$inject=['$rootScope','$scope','myFormFactory','$state','$loading'];
 	
 	angular.module('amoeba.form').controller("myFormController",myFormController);
 	
@@ -945,15 +993,286 @@ angular.module('amoeba.main')
 
 (function(){
 	
-	function myFormFactory($http,FORM_CONSTANTS,$q){
+	function myFormController($rootScope,$scope,myFormFactory,$state,$loading){
+		
+		$loading.start('main');
+		
+		myFormFactory.getForms($scope.userDetails.userId).then(function(response) {
+				$scope.myformDetails=response;
+				$loading.finish("main");
+			}).catch(function(){
+				$loading.finish("main");
+			});
+			
+		$scope.getFormDetails=function(f_id,index){
+			
+			if(	$scope.myformDetails[index].formDetails===undefined){
+				myFormFactory.getFormDetails(f_id).then(function(response){
+					$scope.myformDetails[index].formDetails={};
+					$scope.myformDetails[index].formDetails=response;
+					$scope.myformDetails[index].showDescription=true;
+					$loading.finish("main");
+				}).catch(function(){
+					$loading.finish("main");
+				});
+			}else{
+				$scope.myformDetails[index].showDescription=!$scope.myformDetails[index].showDescription;
+			}
+		};
+		
+		
+	};
+		
+		
+	
+	
+	myFormController.$inject=['$rootScope','$scope','myFormFactory','$state','$loading'];
+	
+	angular.module('amoeba.form').controller("myFormController",myFormController);
+	
+})();
+
+(function(){
+	
+	angular.module('amoeba.consultant').constant("CONSULTANT_CONSTANTS",{
+		
+		"GET_fORM":"/amoeba/consultant/getForms",
+		"GET_USERfORM":"/amoeba/getForm/",
+		"ACCEPT_FORM":"/amoeba/consultant/acceptForm/",
+		"SEND_MESSAGE":"/amoeba/consultant/getMessage/"
+		
+	});
+
+})();
+
+(function(){
+	
+	function consultantController($rootScope,$scope,consultantFactory,$state,$loading){
+		
+		$loading.start('main');
+		
+		consultantFactory.getForms().then(function(response) {
+				$scope.myformDetails=response;
+				$loading.finish("main");
+			}).catch(function(){
+				$loading.finish("main");
+			});
+		
+		
+		$scope.getFormDetails=function(f_id,index){
+			
+			if(	$scope.myformDetails[index].formDetails===undefined){
+				consultantFactory.getFormDetails(f_id).then(function(response){
+					$scope.myformDetails[index].formDetails={};
+					$scope.myformDetails[index].formDetails=response;
+					$scope.myformDetails[index].showDescription=true;
+					$loading.finish("main");
+				}).catch(function(){
+					$loading.finish("main");
+				});
+			}else{
+				$scope.myformDetails[index].showDescription=!$scope.myformDetails[index].showDescription;
+			}
+		};
+		
+		$scope.acceptForm=function(f_id){
+			consultantFactory.acceptForm(f_id).then(function(response){
+				$rootScope.reportDetails=response;
+				$state.go("main.report")
+			}).catch(function(error){
+				$scope.getMessage="Something went wrong please contact administrator";
+				$loading.finish("main");
+            });
+		}
+		
+		};
+		
+		
+	
+	
+	consultantController.$inject=['$rootScope','$scope','consultantFactory','$state','$loading'];
+	
+	angular.module('amoeba.consultant').controller("consultantController",consultantController);
+	
+})();
+
+(function(){
+	
+	function consultantFactory($http,CONSULTANT_CONSTANTS,$q,$state){
 		
 		
 
-		function getForm(){
+		function getForms(){
 			var defered=$q.defer();
-			$http.get(FORM_CONSTANTS.GET_FORMS).success(function(response){
+			$http.get(CONSULTANT_CONSTANTS.GET_fORM).success(function(response){
 				defered.resolve(response);
+			}).error(function(error){
+				defered.reject(error);
+			});
+			return defered.promise;
+		};
+		
+		
+		
+		function getFormDetails(f_id){
+			var defered=$q.defer();
+			$http.get(CONSULTANT_CONSTANTS.GET_USERfORM+f_id).success(function(response){
+				defered.resolve(response);
+			}).error(function(error){
+				defered.reject(error);
+			});
+			return defered.promise;
+		}
+		
+		function acceptForm(f_id){
+			var defered=$q.defer();
+			$http.put(CONSULTANT_CONSTANTS.ACCEPT_FORM+f_id).success(function(response){
+				defered.resolve(response);
+			}).error(function(error){
+				defered.reject(error);
+			});
+			return defered.promise;
+		
+		}
+		
+		
+		return {
+			acceptForm:acceptForm,
+			getForms:getForms,
+			getFormDetails:getFormDetails
+		};
+	};
+	
+	consultantFactory.$inject=['$http','CONSULTANT_CONSTANTS','$q','$state'];
+	
+	angular.module('amoeba.consultant').factory('consultantFactory',consultantFactory);
+	
+})();
+(function(){
+	
+	function reportController($rootScope,$scope,reportFactory,$state,$loading){
+		$loading.start("main.report");
+		
+		reportFactory.getMessages($rootScope.reportDetails.f_id).then(function(response) {
+			$scope.messages=response;
+		}).catch(function(){
+			$loading.finish("main");
+		});
+		
+		$scope.value=function(reportDetails){
+			$scope.reportDetails=reportDetails;
+			$state.go("main.report");
+			$loading.finish("main");
+		}; 
+		
+		
+		
+		 
+		/*if($rootScope.reportDetails===undefined){
+			reportFactory.getFormDetails(f_id).then(function(response){
+				$rootScope.user=response.user;
+				$scope.value(response.user);
+			}).catch(function(){
 				
+			});
+		}else{*/
+			$scope.value($rootScope.reportDetails);
+		//}
+			
+	};
+		
+		
+	
+	
+		reportController.$inject=['$rootScope','$scope','reportFactory','$state','$loading'];
+	
+	angular.module('amoeba.consultant').controller("reportController",reportController);
+	
+})();
+(function(){
+	
+	function reportFactory($http,CONSULTANT_CONSTANTS,$q,$state){
+		
+		function getMessages(f_id){
+			var defered=$q.defer();
+			$http.get(CONSULTANT_CONSTANTS.GET_MESSAGE+f_id).success(function(response){
+				defered.resolve(response);
+			}).error(function(error){
+				defered.reject(error);
+			});
+			return defered.promise;
+		}
+		
+		function getFormDetails(f_id){
+			var defered=$q.defer();
+			$http.get(CONSULTANT_CONSTANTS.GET_USERfORM+f_id).success(function(response){
+				defered.resolve(response);
+			}).error(function(error){
+				defered.reject(error);
+			});
+			return defered.promise;
+		}
+		
+	
+		
+		return {
+			getFormDetails:getFormDetails,
+			getMessages:getMessages
+		};
+	};
+	
+	reportFactory.$inject=['$http','CONSULTANT_CONSTANTS','$q','$state'];
+	
+	angular.module('amoeba.consultant').factory('reportFactory',reportFactory);
+	
+})();
+
+
+
+(function(){
+	
+	function activeFormController($rootScope,$scope,myActiveFormFactory,$state,$loading){
+		
+
+		/*$scope.postJob=function(){
+			myJobsService.editJob=null; 
+			$scope.$emit('sideBarViewEvent', ".submitedForms");
+			$state.go('main.submitedForms');
+		};
+		*/
+
+		$loading.start('main');
+		
+		myActiveFormFactory.getMyForms().then(function(response) {
+				$scope.myformDetails=response;
+				$loading.finish("main");
+			}).catch(function(){
+				$loading.finish("main");
+			});
+			
+		
+		
+	};
+		
+		
+	
+	
+	activeFormController.$inject=['$rootScope','$scope','myActiveFormFactory','$state','$loading'];
+	
+	angular.module('amoeba.form').controller("activeFormController",activeFormController);
+	
+})();
+
+(function(){
+	
+	function myActiveFormFactory($http,FORM_CONSTANTS,$q,$state){
+		
+		
+
+		function getMyForms(){
+			var defered=$q.defer();
+			$http.get(FORM_CONSTANTS.GET_ACTIVE_fORM).success(function(response){
+				defered.resolve(response);
 			}).error(function(error){
 				defered.reject(error);
 			});
@@ -962,15 +1281,21 @@ angular.module('amoeba.main')
 		
 		
 		return {
-			getForm:getForm
+			getMyForms:getMyForms
 		};
 	};
 	
-	myFormFactory.$inject=['$http','FORM_CONSTANTS','$q'];
+	myActiveFormFactory.$inject=['$http','FORM_CONSTANTS','$q','$state'];
 	
-	angular.module('amoeba.form').factory('myFormFactory',myFormFactory);
+	angular.module('amoeba.form').factory('myActiveFormFactory',myActiveFormFactory);
 	
 })();
+
+
+
+
+
+
 
 
 

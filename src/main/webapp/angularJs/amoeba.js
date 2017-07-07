@@ -1,6 +1,6 @@
 (function(){
 	
-	var appModule=angular.module('amoeba',['ui.bootstrap','ngRoute','ui.router','angular-input-stars','angularUtils.directives.dirPagination','ngCookies','darthwade.dwLoading','amoeba.login','amoeba.main','amoeba.profile','amoeba.form']);
+	var appModule=angular.module('amoeba',['ui.bootstrap','ngRoute','ui.router','angular-input-stars','angularUtils.directives.dirPagination','ngCookies','darthwade.dwLoading','amoeba.login','amoeba.main','amoeba.profile','amoeba.form','amoeba.consultant']);
 
 	angular.element(document).ready(function() {
 	    angular.bootstrap("body", ['amoeba']);
@@ -52,17 +52,17 @@
             url: '/submitedForms',
             controller:'myFormController',
             templateUrl: 'partials/mySubmissions.html'
-        }).state('main.myJobs', {
-            url: '/myJobs',
-            controller:'myJobsController',
-            templateUrl: 'partials/myJobs.html'
-        }).state('main.allUsers', {
-            url: '/allUsers',
-            controller:'usersController',
-            templateUrl: 'partials/allUsers.html'
-        }).state('main.mySubmissions', {
-            url: '/mySubmissions',
-            controller:'mySubmissionsController',
+        }).state('main.myForms', {
+            url: '/myForms',
+            controller:'consultantController',
+            templateUrl: 'partials/showReports.html'
+        }).state('main.report', {
+            url: '/report',
+            controller:'reportController',
+            templateUrl: 'partials/editTemplate.html'
+        }).state('main.activeForms', {
+            url: '/activeForms',
+            controller:'activeFormController',
             templateUrl: 'partials/mySubmissions.html'
         }).state('main.viewResume', {
             url: '/viewResume',
