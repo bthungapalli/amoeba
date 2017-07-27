@@ -50,6 +50,7 @@
 					$scope.formSubmitMessageDetails.successMessage.submit=response.success;
 					$scope.resetFormDetails();
 					$loading.finish('main');
+					$state.go("main.submitedForms");
 				}).catch(function(error){
 					$scope.formSubmitMessageDetails.errorMessage.submit="Something went wrong please contact administrator";
 					$loading.finish('main');
