@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.js.amoeba.config.MailUtil;
 import com.js.amoeba.config.SecurityUser;
 import com.js.amoeba.domain.Form;
 import com.js.amoeba.domain.Message;
@@ -34,6 +35,9 @@ public class FormController {
 	private FormService formService;
 	
 	@Autowired
+	private MailUtil mailUtil;
+	
+	@Autowired
 	private MessageService messageService;
 	
 	private static final Logger logger=LoggerFactory.getLogger(FormController.class);
@@ -46,6 +50,9 @@ public class FormController {
 		
 		form.setUser_id(securityUser.getUserId());
 		formService.saveForm(form);
+		//map.put("email", securityUser.getEmail());
+		mailUtil.userFormSubMail(securityUser);
+		
 		
 		map.put("success", "your Form is successfull submited");
 		return new ResponseEntity<Map<String,String>>(map,HttpStatus.OK);

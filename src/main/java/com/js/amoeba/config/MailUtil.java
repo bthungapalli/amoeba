@@ -108,6 +108,40 @@ public class MailUtil {
 		System.out.println("Total execution time for Sending Email: " + (endTime - startTime) + "ms");
 		return new AsyncResult<Void>(null);
 	}
+	@Async
+	@Bean
+	@Lazy
+	
+	public Future<Void> userFormSubMail(User user) throws MessagingException {
+		
+		System.out.println(user.getEmail());
+		long startTime = System.currentTimeMillis();
+		final Context ctx = new Context();
+		String email = user.getEmail();
+		System.out.println(email);
+		ctx.setVariable("email", email);
+		
+		ctx.setVariable("name", user.getFirstName()+ " " +user.getLastName());
+		ctx.setVariable("path", contextPath);
+
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, 1, "utf-8");
+		System.out.println(3);
+		helper.setFrom(from);
+		helper.setSubject(AmoebaConstants.USER_FORM_SUB);
+		helper.setTo(email);
+		helper.setText(templateEngine.process("FormSubMail",ctx),true);
+
+		
+
+		javaMailSender.send(mimeMessage);
+
+		long endTime = System.currentTimeMillis();
+		System.out.println("Total execution time for Sending Email: " + (endTime - startTime) + "ms");
+		return new AsyncResult<Void>(null);
+		
+		
+	}
 
 
 }
