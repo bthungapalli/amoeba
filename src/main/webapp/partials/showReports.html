@@ -31,7 +31,7 @@
                    <td>{{myformDetails.user[0].firstName}}  {{myformDetails.user[0].lastName}} </td>
                 </tr>
                  <tr>
-                 <td ng-show="myformDetails.showDescription" colspan="4" style="text-align: left;background-color: green">
+                 <td ng-show="myformDetails.showDescription" colspan="4" style="text-align: left;background-color: #d2d6d2">
                  <p > Age : {{myformDetails.age}} | Height : {{myformDetails.height}}| <span class="glyphicon glyphicon-calendar"></span>{{myformDetails.submittedAt | date:'MMM dd, yyyy'}} </p>
                  <p ng-bind-html="myformDetails.reportDescription | toTrustHtml"> </p>
                  <button type="submit" class="btn btn-block btn-success active" ng-click="acceptForm(myformDetails.f_id);"> Take Form
