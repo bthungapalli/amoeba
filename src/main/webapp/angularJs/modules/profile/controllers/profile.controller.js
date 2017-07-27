@@ -4,7 +4,10 @@
 		
 		$scope.viewProfile=true;
 		if($scope.userDetails!==undefined){
+
 			$scope.profileDetails=angular.copy($scope.userDetails);//grunt watch
+			$scope.profileDetails.jobType=$scope.profileDetails.jobType!==undefined?($scope.profileDetails.jobType).toString():'';
+
 		} 
 		
 		$scope.editProfile=function(){    
